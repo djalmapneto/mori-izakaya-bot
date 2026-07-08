@@ -35,8 +35,9 @@ function perguntar() {
     if (texto === '/limpar') { historico = []; console.log('🧹 Historico zerado.\n'); return perguntar(); }
 
     try {
-      const { texto: resposta, handoff, usage } = await responder(historico, texto, nomeCliente);
+      const { texto: resposta, handoff, cardapio, usage } = await responder(historico, texto, nomeCliente);
       console.log(`\n🤖 Bot: ${resposta}`);
+      if (cardapio) console.log('   🍣 [enviaria os cardápios em PDF: cardapio, sushi, drinks]');
       if (handoff) console.log('   🔔 [handoff: avisaria o grupo interno e pausaria o chat]');
       if (usage) {
         const lidoCache = usage.cache_read_input_tokens || 0;

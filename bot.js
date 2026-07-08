@@ -11,6 +11,8 @@
  *   node bot.js --listar-grupos   (mostra os JIDs dos grupos p/ preencher config)
  */
 
+const fs = require('fs');
+const path = require('path');
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -23,6 +25,13 @@ const pino = require('pino');
 
 const config = require('./config.json');
 const { responder } = require('./cerebro');
+
+// Cardapios (PDFs) enviados quando o cliente pede o menu
+const CARDAPIOS = [
+  { arquivo: 'cardapio.pdf', nome: 'Cardápio - Mori Izakaya.pdf' },
+  { arquivo: 'sushi.pdf',    nome: 'Sushi Menu - Mori Izakaya.pdf' },
+  { arquivo: 'drinks.pdf',   nome: 'Drinks - Mori Izakaya.pdf' },
+];
 const LISTAR_GRUPOS = process.argv.includes('--listar-grupos');
 
 if (!process.env.ANTHROPIC_API_KEY) {
@@ -58,7 +67,7 @@ function pausar(jid, horas) {
 
 async function pensarResposta(jid, textoCliente, nomeCliente) {
   const hist = historico.get(jid) || [];
-  const { texto, handoff } = await responder(hist, textoCliente, nomeCliente);
+  const { texto, handoff, cardapio } = await responder(hist, textoCliente, nomeCliente);
 
   const novoHist = [
     ...hist,
@@ -67,7 +76,7 @@ async function pensarResposta(jid, textoCliente, nomeCliente) {
   ];
   historico.set(jid, novoHist.slice(-config.limiteHistorico));
 
-  return { texto, handoff };
+  return { texto, handoff, cardapio };
 }
 
 // ---------------------------------------------------------------------------
@@ -77,6 +86,22 @@ async function pensarResposta(jid, textoCliente, nomeCliente) {
 async function enviar(sock, jid, texto) {
   const r = await sock.sendMessage(jid, { text: texto });
   if (r?.key?.id) idsEnviadosPeloBot.add(r.key.id);
+}
+
+async function enviarCardapios(sock, jid) {
+  for (const c of CARDAPIOS) {
+    const caminho = path.join(__dirname, 'cardapios', c.arquivo);
+    if (!fs.existsSync(caminho)) {
+      console.warn(`⚠️  Cardapio nao encontrado: ${caminho}`);
+      continue;
+    }
+    const r = await sock.sendMessage(jid, {
+      document: fs.readFileSync(caminho),
+      fileName: c.nome,
+      mimetype: 'application/pdf',
+    });
+    if (r?.key?.id) idsEnviadosPeloBot.add(r.key.id);
+  }
 }
 
 async function avisarEquipe(sock, jidCliente, nomeCliente, ultimaMsg) {
@@ -133,8 +158,12 @@ async function processar(sock, jid, nome) {
 
   try {
     await sock.sendPresenceUpdate('composing', jid); // "digitando..."
-    const { texto, handoff } = await pensarResposta(jid, textoCliente, nome);
+    const { texto, handoff, cardapio } = await pensarResposta(jid, textoCliente, nome);
     if (texto) await enviar(sock, jid, texto);
+    if (cardapio) {
+      await enviarCardapios(sock, jid);
+      console.log(`🍣 Cardapios enviados -> ${jid}`);
+    }
     if (handoff) {
       await avisarEquipe(sock, jid, nome, textoCliente);
       pausar(jid, config.pausaHumanoHoras);

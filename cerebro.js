@@ -59,6 +59,15 @@ etiqueta; ela e um sinal interno).
 Se a mensagem for so um agradecimento, "ok", figurinha ou papo casual que ja foi
 resolvido, pode encerrar educadamente sem chamar ninguem.
 
+ENVIAR O CARDAPIO (arquivos):
+Se o cliente pedir para VER o cardapio, o menu ou a lista de pratos ("me manda o
+cardapio", "tem cardapio?", "quero ver o menu", "manda os precos", etc.), responda
+de forma breve e simpatica avisando que ja vai enviar (ex: "Claro! 🍣 Ja te mando
+nosso cardapio completo, um instante 😊") e adicione EXATAMENTE a etiqueta
+<<CARDAPIO>> no final. Isso NAO precisa chamar a atendente — o proprio sistema envia
+os arquivos automaticamente. Nao tente descrever o cardapio inteiro em texto quando
+o cliente so quer ver o menu; envie os arquivos com <<CARDAPIO>>.
+
 ============ BASE DE CONHECIMENTO (fonte da verdade) ============
 ${base}
 ============ FIM DA BASE ============`;
@@ -115,9 +124,13 @@ async function responder(historico, textoCliente, nomeCliente = '') {
     .trim();
 
   const handoff = bruto.includes('<<HANDOFF>>');
-  const texto = bruto.replace(/<<HANDOFF>>/g, '').trim();
+  const cardapio = bruto.includes('<<CARDAPIO>>');
+  const texto = bruto
+    .replace(/<<HANDOFF>>/g, '')
+    .replace(/<<CARDAPIO>>/g, '')
+    .trim();
 
-  return { texto, handoff, usage: data.usage };
+  return { texto, handoff, cardapio, usage: data.usage };
 }
 
 module.exports = { responder, SYSTEM_PROMPT };
