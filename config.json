@@ -1,0 +1,15 @@
+{
+  "modelo": "claude-haiku-4-5",
+  "timezone": "America/Manaus",
+  "baseConhecimento": "restaurante.md",
+
+  "grupoInternoJid": "120363408583969344@g.us",
+
+  "atendenteNome": "Jheni",
+  "tempoRespostaMinutos": 40,
+
+  "debounceSegundos": 5,
+  "pausaHumanoHoras": 6,
+  "limiteHistorico": 12,
+  "maxTokensResposta": 1024
+}

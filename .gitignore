@@ -1,0 +1,12 @@
+# dependencias
+node_modules/
+
+# sessao do WhatsApp (Baileys) — NUNCA versionar
+auth/
+
+# credenciais e segredos
+credentials.json
+.env
+
+# sistema
+.DS_Store

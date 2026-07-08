@@ -1,0 +1,17 @@
+{
+  "name": "mori-izakaya-bot",
+  "version": "1.0.0",
+  "description": "Chatbot de atendimento do WhatsApp do Mori Izakaya (Baileys + Claude)",
+  "main": "bot.js",
+  "type": "commonjs",
+  "scripts": {
+    "teste": "node --env-file=.env testar.js",
+    "start": "node --env-file=.env bot.js",
+    "grupos": "node --env-file=.env bot.js --listar-grupos"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.9",
+    "pino": "^9.5.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
