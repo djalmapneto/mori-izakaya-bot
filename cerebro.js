@@ -68,6 +68,20 @@ nosso cardapio completo, um instante 😊") e adicione EXATAMENTE a etiqueta
 os arquivos automaticamente. Nao tente descrever o cardapio inteiro em texto quando
 o cliente so quer ver o menu; envie os arquivos com <<CARDAPIO>>.
 
+HORARIO DE ATENDIMENTO HUMANO: todo dia das ${config.atendimento.inicioHora}h as ${config.atendimento.fimHora}h,
+exceto domingo (das ${config.atendimento.inicioHora}h as ${config.atendimento.domingoFimHora}h).
+Voce responde duvidas normais (cardapio, precos, horario, localizacao, enviar cardapio) 24 HORAS.
+A UNICA diferenca fora do horario de atendimento e na hora de chamar a atendente. Em cada mensagem
+eu vou te informar "Atendimento humano agora: DISPONIVEL" ou "INDISPONIVEL":
+- Se DISPONIVEL e precisar de handoff: mensagem normal (chamar a ${config.atendenteNome}, que responde
+  em ate ${config.tempoRespostaMinutos} minutos).
+- Se INDISPONIVEL e precisar de handoff: NAO prometa ${config.tempoRespostaMinutos} minutos. Avise com
+  carinho que estamos fora do horario de atendimento e que a ${config.atendenteNome} retorna assim que
+  reabrir. Ex: "No momento estamos fora do horario de atendimento 🌙. Assim que reabrirmos, a
+  ${config.atendenteNome} retorna sua mensagem! Nosso atendimento e todo dia das ${config.atendimento.inicioHora}h
+  as ${config.atendimento.fimHora}h (domingo ate ${config.atendimento.domingoFimHora}h) 😊". Mesmo assim,
+  adicione <<HANDOFF>> no final.
+
 ============ BASE DE CONHECIMENTO (fonte da verdade) ============
 ${base}
 ============ FIM DA BASE ============`;
@@ -83,6 +97,18 @@ function agoraEmManaus() {
   }).format(new Date());
 }
 
+// true se o atendimento humano (Jheni/equipe) esta disponivel neste momento
+function atendimentoDisponivel(agora = new Date()) {
+  const partes = new Intl.DateTimeFormat('en-US', {
+    timeZone: config.timezone, weekday: 'short', hour: '2-digit', hour12: false,
+  }).formatToParts(agora);
+  const dia = partes.find((p) => p.type === 'weekday').value; // Sun, Mon, ...
+  let hora = parseInt(partes.find((p) => p.type === 'hour').value, 10);
+  if (hora === 24) hora = 0; // meia-noite em alguns ambientes
+  const fim = dia === 'Sun' ? config.atendimento.domingoFimHora : config.atendimento.fimHora;
+  return hora >= config.atendimento.inicioHora && hora < fim;
+}
+
 /**
  * Recebe o historico ([{role, content}]), a mensagem do cliente e (opcional) o
  * nome do cliente. Retorna { texto, handoff, usage }.
@@ -90,13 +116,14 @@ function agoraEmManaus() {
 async function responder(historico, textoCliente, nomeCliente = '') {
   const mensagens = [...historico, { role: 'user', content: textoCliente }];
   const nome = nomeCliente || 'desconhecido';
+  const atende = atendimentoDisponivel() ? 'DISPONIVEL' : 'INDISPONIVEL';
 
   const corpo = {
     model: config.modelo,
     max_tokens: config.maxTokensResposta,
     system: [
       { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
-      { type: 'text', text: `Data e hora atuais em Manaus: ${agoraEmManaus()}. Nome do cliente neste chat: ${nome}.` },
+      { type: 'text', text: `Data e hora atuais em Manaus: ${agoraEmManaus()}. Nome do cliente neste chat: ${nome}. Atendimento humano agora: ${atende}.` },
     ],
     messages: mensagens,
   };

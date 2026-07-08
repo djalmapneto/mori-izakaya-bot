@@ -57,8 +57,8 @@ function estaPausado(jid) {
   return true;
 }
 
-function pausar(jid, horas) {
-  pausados.set(jid, Date.now() + horas * 3600 * 1000);
+function pausar(jid, minutos) {
+  pausados.set(jid, Date.now() + minutos * 60 * 1000);
 }
 
 // ---------------------------------------------------------------------------
@@ -115,7 +115,7 @@ async function avisarEquipe(sock, jidCliente, nomeCliente, ultimaMsg) {
     `👤 Cliente: ${nomeCliente || 'sem nome'} (+${numero})\n` +
     `💬 "${ultimaMsg}"\n\n` +
     `O bot ja avisou o cliente e vai ficar em silencio nesse chat por ` +
-    `${config.pausaHumanoHoras}h. Alguem pode assumir. 🙏`;
+    `${config.pausaHumanoMinutos} minutos. Alguem pode assumir. 🙏`;
   await sock.sendMessage(config.grupoInternoJid, { text: aviso });
 }
 
@@ -166,8 +166,8 @@ async function processar(sock, jid, nome) {
     }
     if (handoff) {
       await avisarEquipe(sock, jid, nome, textoCliente);
-      pausar(jid, config.pausaHumanoHoras);
-      console.log(`🔔 Handoff -> ${jid} (pausado ${config.pausaHumanoHoras}h)`);
+      pausar(jid, config.pausaHumanoMinutos);
+      console.log(`🔔 Handoff -> ${jid} (pausado ${config.pausaHumanoMinutos}min)`);
     }
     await sock.sendPresenceUpdate('paused', jid);
   } catch (err) {
@@ -245,8 +245,8 @@ async function conectar() {
       // Se NAO foi o bot que enviou, foi um humano digitando -> pausa o bot nesse chat.
       if (msg.key.fromMe) {
         if (!idsEnviadosPeloBot.has(msg.key.id)) {
-          pausar(jid, config.pausaHumanoHoras);
-          console.log(`🙋 Humano assumiu ${jid} — bot em silencio por ${config.pausaHumanoHoras}h.`);
+          pausar(jid, config.pausaHumanoMinutos);
+          console.log(`🙋 Humano assumiu ${jid} — bot em silencio por ${config.pausaHumanoMinutos}min.`);
         }
         continue;
       }
@@ -264,7 +264,7 @@ async function conectar() {
         await enviar(sock, jid,
           'Recebi sua mensagem! 😊 Vou chamar alguem da nossa equipe para te ajudar melhor. 🏮');
         await avisarEquipe(sock, jid, nome, '[mensagem de midia/audio]');
-        pausar(jid, config.pausaHumanoHoras);
+        pausar(jid, config.pausaHumanoMinutos);
         continue;
       }
 

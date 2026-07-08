@@ -8,8 +8,10 @@
   "atendenteNome": "Jheni",
   "tempoRespostaMinutos": 40,
 
+  "atendimento": { "inicioHora": 10, "fimHora": 23, "domingoFimHora": 15 },
+
   "debounceSegundos": 5,
-  "pausaHumanoHoras": 6,
+  "pausaHumanoMinutos": 40,
   "limiteHistorico": 12,
   "maxTokensResposta": 1024
 }
