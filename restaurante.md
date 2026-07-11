@@ -17,7 +17,7 @@
 - Domingo: fechado
 ### Almoço
 - Todos os dias, das 11h às 15h.
-- Buffet livre (ver seção "Almoço" abaixo)
+- Festival do Mori — buffet livre (ver seção "Almoço" abaixo)
 
 ## Localização e contato
 - Endereço: Rua São Luís, 105 — Adrianópolis (Manaus/AM)
@@ -33,18 +33,30 @@
   Alelo Refeição.
 
 ## Reservas
-- **Almoço:** reservamos todos os dias.
-- **Jantar:** segunda a quinta até as 20:00; sexta e sábado até as 19:00.
-- Limite máximo: 15 pessoas.
+- **Almoço:** reservamos todos os dias, das 11h às 14:30.
+- **Jantar (à noite):**
+  - Segunda a quinta: qualquer horário das 18h às 22h.
+  - Sexta e sábado: somente até as 19:30.
+  - Domingo: não há jantar, então não há reserva no jantar.
+- **Até 15 pessoas** (almoço ou jantar): o Morinho anota a reserva e a ATENDENTE
+  (Jheni) confirma.
+- **Acima de 15 pessoas** (almoço ou jantar): o Morinho chama a Jheni para
+  verificar a disponibilidade.
 - Tolerância de atraso: 10 minutos.
 - Dados necessários p/ reservar: Data, Nome, Horário, Pessoas.
-- (Reservas são confirmadas pela ATENDENTE — o bot coleta os dados e passa.)
 
-## Almoço — Buffet
-- Buffet livre com sushis e pratos quentes, à vontade, quantas vezes quiser:
-  **R$ 157,00** por pessoa.
-- Além do buffet, o cliente pode pedir (feitos na hora, quentinhos e frescos):
-  kushiyakis, sashimis dos peixes disponíveis no dia, hand rolls, tempurás e baos.
+## Almoço — Festival do Mori
+- **Festival do Mori** é o nome do nosso almoço: um buffet livre com sushis e
+  pratos quentes, à vontade, quantas vezes quiser — **R$ 157,00** por pessoa.
+  (Se o cliente falar "buffet", "rodízio" ou "almoço livre", é o Festival do Mori.)
+- **TUDO está incluso no valor do Festival do Mori (R$ 157,00), SEM custo extra.**
+  Os kushiyakis, sashimis dos peixes do dia, hand rolls, tempurás e baos **também
+  estão inclusos** — a diferença é só que esses itens são pedidos ao garçom e
+  preparados na hora, para chegar o mais quentinhos e frescos possível. NADA disso
+  é cobrado à parte.
+- Se o cliente perguntar se os adicionais (kushiyakis, sashimis, hand rolls,
+  tempurás, baos) têm custo extra, a resposta é: NÃO, estão inclusos no Festival
+  do Mori; é só pedir ao garçom que eles preparam fresquinho na hora.
 
 ## Peixes do dia
 - Geralmente: atum, salmão, robalo e carapau.
