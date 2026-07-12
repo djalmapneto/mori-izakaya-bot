@@ -17,7 +17,8 @@
 - Domingo: fechado
 ### Almoço
 - Todos os dias, das 11h às 15h.
-- Festival do Mori — buffet livre (ver seção "Almoço" abaixo)
+- No almoço o cliente ESCOLHE: o **Festival do Mori** (buffet livre) ou pedir
+  **à la carte** pelo cardápio (ver seção "Almoço" abaixo).
 
 ## Localização e contato
 - Endereço: Rua São Luís, 105 — Adrianópolis (Manaus/AM)
@@ -45,9 +46,12 @@
 - Tolerância de atraso: 10 minutos.
 - Dados necessários p/ reservar: Data, Nome, Horário, Pessoas.
 
-## Almoço — Festival do Mori
-- **Festival do Mori** é o nome do nosso almoço: um buffet livre com sushis e
-  pratos quentes, à vontade, quantas vezes quiser — **R$ 157,00** por pessoa.
+## Almoço — Festival do Mori (buffet) OU à la carte
+No almoço o cliente tem **duas opções** e escolhe a que preferir:
+
+### 1) Festival do Mori (buffet livre)
+- **Festival do Mori** é o nome do nosso buffet do almoço: sushis e pratos
+  quentes, à vontade, quantas vezes quiser — **R$ 157,00** por pessoa.
   (Se o cliente falar "buffet", "rodízio" ou "almoço livre", é o Festival do Mori.)
 - **TUDO está incluso no valor do Festival do Mori (R$ 157,00), SEM custo extra.**
   Os kushiyakis, sashimis dos peixes do dia, hand rolls, tempurás e baos **também
@@ -57,6 +61,20 @@
 - Se o cliente perguntar se os adicionais (kushiyakis, sashimis, hand rolls,
   tempurás, baos) têm custo extra, a resposta é: NÃO, estão inclusos no Festival
   do Mori; é só pedir ao garçom que eles preparam fresquinho na hora.
+
+### 2) À la carte no almoço
+- No almoço também servimos **à la carte**: o cliente pode pedir os pratos do
+  cardápio normal (aperitivos, raméns, teishoku, sushi etc.), pagando só o que
+  pedir, em vez de entrar no Festival do Mori.
+
+### Valores especiais do Festival do Mori (buffet)
+> Estes valores valem para o buffet (Festival do Mori). Quem come à la carte
+> paga apenas o que pedir do cardápio.
+- **Crianças de 0 a 5 anos: NÃO pagam** (isentas).
+- **Crianças de 6 a 9 anos: R$ 97,00** por criança.
+- **A partir de 10 anos: valor normal, R$ 157,00** por pessoa.
+- **Pacientes bariátricos que apresentarem a carteirinha: R$ 97,00** por pessoa.
+  (Sem a carteirinha, é o valor normal.)
 
 ## Peixes do dia
 - Geralmente: atum, salmão, robalo e carapau.
