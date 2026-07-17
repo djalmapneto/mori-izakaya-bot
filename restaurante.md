@@ -274,6 +274,116 @@ No almoço o cliente tem **duas opções** e escolhe a que preferir:
 
 ---
 
+# SAQUÊS E LICORES
+> Todos importados **diretamente do Japão**.
+> Quando o cliente perguntar sobre um saquê/licor, mandar a **descrição + preço da
+> dose + preço da garrafa** (quando houver garrafa).
+
+## O que significa "licoroso"?
+Não é um estilo japonês — é uma **classificação legal brasileira** (IN MAPA
+nº 34/2012). Todo saquê vendido no Brasil é rotulado como **seco** (menos de 30g de
+açúcar por litro) ou **licoroso** (30g ou mais). Ou seja: **licoroso = dos doces.**
+
+## Saquês
+
+### Beau Michelle — dose 50ml **R$ 89,90** (somente dose, não vendemos a garrafa)
+Saquê leve e frutado da kura Tomono Shuzo, em Nagano, **fermentado ao som de
+"Michelle", dos Beatles** — daí o nome. O dono da casa acredita que tocar música
+para o mosto deixa o sabor mais macio. De baixa graduação (9%), tem doçura delicada
+e acidez viva que lembram um vinho branco.
+- Servir: bem gelado (3–8°C), em taça.
+- ⚠️ É o mais caro por dose da carta, mas **NÃO é um saquê premium nem raro** — é um
+  saquê leve e acessível, e a garrafa de 500ml só rende 10 doses. Vender como
+  "premium" seria enganoso. O charme dele é o sabor e a história.
+
+### Niida — garrafa 720ml **R$ 780,00** | dose 50ml **R$ 59,90**
+Da **Niida Honke**, kura de Fukushima fundada em **1711** e hoje na 18ª geração da
+mesma família. Um junmai natural, de arroz cultivado sem agrotóxicos nos arrozais da
+própria casa e fermentado pelo método kimoto com levedura selvagem do ambiente da
+kura — corpo macio, boa untuosidade e um leve toque de melão.
+- Curiosidades: a casa opera no mesmo endereço há mais de 300 anos, faz os próprios
+  barris de cedro com madeira da floresta da família, e usa crustáceos de água doce
+  no lugar de herbicida nos arrozais.
+- ⚠️ **PENDENTE — não afirmar temperatura de serviço.** "Niida" é o sobrenome da
+  família, não o nome do saquê. A casa tem dois rótulos de 720ml no Brasil, e **um
+  se bebe gelado e o outro foi feito para servir morno**. Enquanto o rótulo não for
+  confirmado, se o cliente perguntar como servir → chamar a atendente.
+
+### Suigei "Baleia Bêbada" — garrafa 720ml **R$ 550,00** | dose 50ml **R$ 44,90**
+De Kochi, a antiga província de **Tosa**, este junmai especial (tokubetsu junmai) é
+seco e refrescante, de aroma discreto, umami de arroz e final limpo — um saquê feito
+para **acompanhar a comida**, não para roubar a cena.
+- Servir: levemente gelado (10–15°C) **ou** morno (40–45°C) — funciona bem nos dois.
+- Curiosidade: o nome vem do senhor feudal **Yamauchi Yodo**, que amava tanto saquê
+  que se autointitulava "o senhor bêbado do mar das baleias" (鯨海酔侯).
+- ⚠️ Existe uma versão falsa circulando (de que o nome vem de "saquê feito para as
+  baleias"). É marketing de importador e **contradiz a fonte oficial**. Não repetir.
+
+### Gassan — garrafa 720ml **R$ 650,00** | dose 50ml **R$ 49,90**
+Da kura **Yoshida Shuzo**, que produz saquê há cerca de 300 anos aos pés do monte
+Gassan, em **Shimane** — a província que a lenda aponta como berço do saquê no Japão.
+Um junmai seco e de corpo médio, feito com uma das águas mais leves do mundo, que une
+secura marcante a um final limpo e aveludado. (É a **mesma casa do nosso licor
+Yuzumoon**.)
+- Servir: gelado ou levemente morno.
+- Curiosidade: o nome vem do **castelo de Gassan Toda**, fortaleza do clã Amago. A
+  família Yoshida subia a montanha todo ano para oferecer ao senhor feudal o melhor
+  barril da safra — era esse barril de honra que se chamava "Gassan". A água vem de um
+  poço histórico reservado ao chá dos senhores, com dureza 0,3 (das mais moles do
+  Japão) — é ela que explica o saquê ser leve apesar de bem seco.
+- ⚠️ Existem **dois montes Gassan** no Japão. O famoso (dos peregrinos, em Yamagata) é
+  de **outro produtor**. Não contar a história dos peregrinos/neve — não é a nossa.
+
+### Miyako Homedry — garrafa 2L **R$ 650,00** | dose 75ml **R$ 34,90**
+Saquê de mesa da tradicional **Toa Shuzo**, em Saitama: seco, leve e refrescante, com
+notas suaves de cereais e um final de umami que permanece. Versátil à mesa.
+- Servir: levemente gelado (~15°C) **ou aquecido, no estilo atsukan**. É o nosso saquê
+  mais indicado para quem quer experimentar saquê quente.
+- Curiosidade: a Toa Shuzo foi fundada em **1625** e, além de saquê, produz **uísque
+  japonês** (marca Golden Horse) desde 1948 — quase 400 anos fazendo as duas coisas.
+
+### Kaori Junmai Licoroso — garrafa 900ml **R$ 480,00** | dose 50ml **R$ 39,90**
+Saquê da categoria **licoroso** — ou seja, naturalmente adocicado e encorpado. Uma
+porta de entrada agradável para quem está começando no saquê.
+- Servir: bem gelado.
+- ⚠️ **PENDENTE — usar SOMENTE a descrição acima.** O rótulo exato ainda não foi
+  confirmado. Se o cliente pedir detalhes (produtor, região, aroma, tipo de
+  fermentação) → chamar a atendente.
+
+## Licores
+
+### Licor Umeshu — garrafa 2L **R$ 600,00** | dose 75ml **R$ 34,90**
+Licor japonês feito com a **ume** — fruta parente do damasco — curtida por meses em
+álcool com açúcar, resultando numa bebida âmbar, doce e levemente ácida, de aroma
+frutado marcante. Leve no teor alcoólico, é uma **ótima porta de entrada para quem
+acha o saquê seco demais**.
+- Servir: puro e bem gelado, com gelo, ou com água com gás.
+- Curiosidade: chamar de "vinho de ameixa" é errado em dois sentidos — não é vinho
+  (é licor por infusão, como o limoncello) e a ume não é ameixa, é parente do damasco.
+- ⚠️ **A marca não foi informada.** A descrição acima vale para o estilo umeshu em
+  geral. **NÃO citar produtor, teor alcoólico exato nem "sem aditivos".**
+
+### Licor Yuzumoon — garrafa 500ml **R$ 780,00** | dose 50ml **R$ 74,90**
+Licor japonês de **yuzu** da **Yoshida Shuzo**, em Shimane — a **mesma casa do nosso
+saquê Gassan**, que produz saquê desde 1743. Feito com suco de yuzu de Shimane e
+shochu destilado da borra do saquê, é leve (8% de álcool) e refrescante, de acidez
+macia e doçura delicada, com notas que lembram toranja.
+- Servir: bem gelado, puro, com gelo ou com água com gás.
+- Curiosidade: "Gassan" (月山) significa "Montanha da **Lua**" — por isso o licor de
+  yuzu da casa virou "Yuzu**moon**". O irmão de ameixa se chama "**Plumoon**". 🌙
+
+## Regras do bot para saquês e licores
+- Ao falar de um saquê/licor: **descrição + preço da dose + preço da garrafa**.
+- **NUNCA** descreva nenhum deles como "raro", "premium", "edição limitada" ou "o mais
+  nobre da casa". Nenhum é raro, e o cliente pode conferir em 30 segundos no Google.
+  Venda o que é verdade: **importação direta do Japão**, casas tradicionais de séculos,
+  e as histórias reais (que são ótimas).
+- Se o cliente perguntar algo que não está aqui — safra, teor alcoólico exato, tipo de
+  arroz, harmonização específica, temperatura de um item marcado como PENDENTE — **NÃO
+  invente**: chame a atendente.
+
+---
+
 # DRINKS
 
 ## Clássicos
