@@ -60,9 +60,18 @@ etiqueta; ela e um sinal interno).
 RESERVAS (regra especial — leia com atencao):
 As regras MUDAM conforme o dia da semana: sexta e sabado sao mais restritos que os
 demais dias. Entao a PRIMEIRA coisa a descobrir e QUE DIA DA SEMANA cai a data que o
-cliente pediu (voce recebe a data de hoje; calcule com cuidado). Ao anotar, sempre
-escreva o dia da semana junto com a data (ex: "sexta, 05/08") — assim, se voce errar
-a conta, o proprio cliente corrige na hora.
+cliente pediu.
+
+COMO DESCOBRIR O DIA DA SEMANA (isso e critico, leia com atencao): voce recebe, junto
+com a data de hoje, um CALENDARIO DOS PROXIMOS 30 DIAS ja calculado. PROCURE a data
+nessa lista e use o dia da semana que estiver la. NUNCA calcule o dia da semana de
+cabeca e NUNCA confie na sua memoria sobre calendarios — voce erra essa conta, e um
+dia da semana errado faz voce aplicar a regra de reserva errada. Se a data que o
+cliente pediu NAO estiver na lista (por exemplo, e daqui a varios meses), NAO invente
+o dia da semana: chame a ${config.atendenteNome} adicionando <<HANDOFF>> no final.
+
+Ao anotar, sempre escreva o dia da semana junto com a data (ex: "sexta, 05/08") —
+assim o cliente confere junto com voce.
 
 1) JANELAS QUE ACEITAM RESERVA. Se o cliente pedir fora delas, explique a regra com
    gentileza e ofereca um horario que caiba:
@@ -141,9 +150,24 @@ const SYSTEM_PROMPT = montarSystemPrompt(carregarBase());
 function agoraEmManaus() {
   return new Intl.DateTimeFormat('pt-BR', {
     timeZone: config.timezone,
-    weekday: 'long', day: '2-digit', month: '2-digit',
+    weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit',
   }).format(new Date());
+}
+
+// Calendario pronto dos proximos dias. O modelo erra conta de calendario ("18/07
+// e quinta?"), e as regras de reserva dependem do dia da semana — entao entregamos
+// a resposta mastigada em vez de deixar ele calcular.
+function proximosDias(n = 30) {
+  const fmt = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: config.timezone,
+    weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
+  });
+  const dias = [];
+  for (let i = 0; i < n; i++) {
+    dias.push(fmt.format(new Date(Date.now() + i * 86400000)));
+  }
+  return dias.join(' | ');
 }
 
 // true se o atendimento humano (Jheni/equipe) esta disponivel neste momento
@@ -172,7 +196,11 @@ async function responder(historico, textoCliente, nomeCliente = '') {
     max_tokens: config.maxTokensResposta,
     system: [
       { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
-      { type: 'text', text: `Data e hora atuais em Manaus: ${agoraEmManaus()}. Nome do cliente neste chat: ${nome}. Atendimento humano agora: ${atende}.` },
+      { type: 'text', text: `Data e hora atuais em Manaus: ${agoraEmManaus()}. Nome do cliente neste chat: ${nome}. Atendimento humano agora: ${atende}.
+
+CALENDARIO DOS PROXIMOS 30 DIAS (ja calculado — use SEMPRE esta lista para saber o dia
+da semana de uma data; NUNCA calcule de cabeca):
+${proximosDias()}` },
     ],
     messages: mensagens,
   };
