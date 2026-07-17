@@ -34,17 +34,38 @@
   Alelo Refeição.
 
 ## Reservas
-- **Almoço:** reservamos todos os dias, das 11h às 14:30.
-- **Jantar (à noite):**
-  - Segunda a quinta: qualquer horário das 18h às 22h.
-  - Sexta e sábado: somente até as 19:30.
-  - Domingo: não há jantar, então não há reserva no jantar.
-- **Até 15 pessoas** (almoço ou jantar): o Morinho anota a reserva e a ATENDENTE
-  (Jheni) confirma.
-- **Acima de 15 pessoas** (almoço ou jantar): o Morinho chama a Jheni para
-  verificar a disponibilidade.
+> ⚠️ As regras MUDAM conforme o dia da semana. Sexta e sábado são mais restritos.
+
+### Almoço
+- **Domingo a quinta:** reservamos das 11h às 14:30.
+  - Até **15 pessoas**: o Morinho anota e a Jheni confirma.
+  - Acima de 15 pessoas: o Morinho chama a Jheni.
+- **Sexta e sábado:** reservamos **somente até 12:15**. Depois de 12:15 não há
+  reserva no almoço — o atendimento é por ordem de chegada.
+  - Até **10 pessoas**: o Morinho anota e a Jheni confirma.
+  - Acima de 10 pessoas: o Morinho chama a Jheni.
+
+### Jantar (à noite)
+- **Segunda a quinta:** qualquer horário das 18h às 22h.
+  - Até **15 pessoas**: o Morinho anota e a Jheni confirma.
+  - Acima de 15 pessoas: o Morinho chama a Jheni.
+- **Sexta e sábado:** somente até as **19:30**.
+  - Até **10 pessoas**: o Morinho anota e a Jheni confirma.
+  - Acima de 10 pessoas: o Morinho chama a Jheni.
+- **Domingo:** não há jantar, então não há reserva no jantar.
+
+### Geral
 - Tolerância de atraso: 10 minutos.
 - Dados necessários p/ reservar: Data, Nome, Horário, Pessoas.
+
+## Horário de pico e encerramento da cozinha
+> Isto NÃO bloqueia reserva — serve para o Morinho avisar o cliente com carinho,
+> para ele não chegar e ser pego de surpresa.
+- **Almoço:** o pico é das 12:15 às 13:30. A **cozinha encerra às 15h**.
+- **Jantar:** o pico é das 19:30 às 21:30. A **cozinha encerra às 23h** (segunda a
+  quinta) e à **00h** (sexta e sábado).
+- Se o cliente quiser um horário depois do pico, avise gentilmente até que horas a
+  cozinha funciona.
 
 ## Almoço — Festival do Mori (buffet) OU à la carte
 No almoço o cliente tem **duas opções** e escolhe a que preferir:
