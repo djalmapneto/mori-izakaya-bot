@@ -304,10 +304,11 @@ kura — corpo macio, boa untuosidade e um leve toque de melão.
 - Curiosidades: a casa opera no mesmo endereço há mais de 300 anos, faz os próprios
   barris de cedro com madeira da floresta da família, e usa crustáceos de água doce
   no lugar de herbicida nos arrozais.
-- ⚠️ **PENDENTE — não afirmar temperatura de serviço.** "Niida" é o sobrenome da
-  família, não o nome do saquê. A casa tem dois rótulos de 720ml no Brasil, e **um
-  se bebe gelado e o outro foi feito para servir morno**. Enquanto o rótulo não for
-  confirmado, se o cliente perguntar como servir → chamar a atendente.
+- ⚠️ **PENDENTE (só a temperatura de serviço).** Rótulo confirmado: é o **Niida
+  Shizenshu** (にいだしぜんしゅ). Mas a casa tem dois Shizenshu de 720ml — um se bebe
+  gelado, o outro foi feito para servir morno — e a etiqueta do pescoço não deu para
+  ler. Falta só o **teor alcoólico**: 14,9% = servir gelado; 13,8% = servir morno. Até
+  confirmar, se o cliente perguntar a temperatura → chamar a atendente.
 
 ### Suigei "Baleia Bêbada" — garrafa 720ml **R$ 550,00** | dose 50ml **R$ 44,90**
 De Kochi, a antiga província de **Tosa**, este junmai especial (tokubetsu junmai) é
@@ -343,25 +344,25 @@ notas suaves de cereais e um final de umami que permanece. Versátil à mesa.
   japonês** (marca Golden Horse) desde 1948 — quase 400 anos fazendo as duas coisas.
 
 ### Kaori Junmai Licoroso — garrafa 900ml **R$ 480,00** | dose 50ml **R$ 39,90**
-Saquê da categoria **licoroso** — ou seja, naturalmente adocicado e encorpado. Uma
-porta de entrada agradável para quem está começando no saquê.
-- Servir: bem gelado.
-- ⚠️ **PENDENTE — usar SOMENTE a descrição acima.** O rótulo exato ainda não foi
-  confirmado. Se o cliente pedir detalhes (produtor, região, aroma, tipo de
-  fermentação) → chamar a atendente.
+(rótulo confirmado: 薫り華やぐ純米酒 — "Kaori Hanayagu Junmaishu")
+Um **junmai** (saquê puro de arroz) incomum, **fermentado com levedura de vinho** — o
+que lhe dá aroma floral e um paladar **agridoce, doce e frutado**, mais parecido com um
+vinho branco do que com um saquê tradicional. Harmoniza muito bem com comida, da
+cozinha japonesa a massas e queijos.
+- Servir: bem gelado, em taça.
+- "Licoroso" é a categoria legal brasileira dos saquês doces (≥ 30g de açúcar/litro).
 
 ## Licores
 
-### Licor Umeshu — garrafa 2L **R$ 600,00** | dose 75ml **R$ 34,90**
+### Licor Umeshu (Ajiwai) — garrafa 2L **R$ 600,00** | dose 75ml **R$ 34,90**
+(rótulo confirmado: あじわい梅酒 — "Ajiwai Umeshu")
 Licor japonês feito com a **ume** — fruta parente do damasco — curtida por meses em
-álcool com açúcar, resultando numa bebida âmbar, doce e levemente ácida, de aroma
-frutado marcante. Leve no teor alcoólico, é uma **ótima porta de entrada para quem
-acha o saquê seco demais**.
+álcool com açúcar: bebida âmbar, doce e levemente ácida, de aroma frutado. O nosso é o
+**Ajiwai**, de estilo **macio e aveludado** ("funwari maroyaka" = suave e mellow). Leve
+no teor alcoólico, é uma ótima porta de entrada para quem acha o saquê seco demais.
 - Servir: puro e bem gelado, com gelo, ou com água com gás.
-- Curiosidade: chamar de "vinho de ameixa" é errado em dois sentidos — não é vinho
-  (é licor por infusão, como o limoncello) e a ume não é ameixa, é parente do damasco.
-- ⚠️ **A marca não foi informada.** A descrição acima vale para o estilo umeshu em
-  geral. **NÃO citar produtor, teor alcoólico exato nem "sem aditivos".**
+- Curiosidade: chamar de "vinho de ameixa" é impreciso — não é vinho (é licor por
+  infusão, como o limoncello) e a ume é parente do damasco, não da ameixa.
 
 ### Licor Yuzumoon — garrafa 500ml **R$ 780,00** | dose 50ml **R$ 74,90**
 Licor japonês de **yuzu** da **Yoshida Shuzo**, em Shimane — a **mesma casa do nosso
