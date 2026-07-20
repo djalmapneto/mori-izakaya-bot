@@ -32,6 +32,8 @@ const CARDAPIOS = [
   { arquivo: 'sushi.pdf',    nome: 'Sushi Menu - Mori Izakaya.pdf' },
   { arquivo: 'drinks.pdf',   nome: 'Drinks - Mori Izakaya.pdf' },
 ];
+// Carta de saquês e licores (PDF) — enviada só quando o cliente pede os saquês
+const CARTA_SAQUES = { arquivo: 'saques.pdf', nome: 'Carta de Saquês e Licores - Mori Izakaya.pdf' };
 const LISTAR_GRUPOS = process.argv.includes('--listar-grupos');
 
 if (!process.env.ANTHROPIC_API_KEY) {
@@ -67,7 +69,7 @@ function pausar(jid, minutos) {
 
 async function pensarResposta(jid, textoCliente, nomeCliente) {
   const hist = historico.get(jid) || [];
-  const { texto, handoff, cardapio } = await responder(hist, textoCliente, nomeCliente);
+  const { texto, handoff, cardapio, cartaSaques } = await responder(hist, textoCliente, nomeCliente);
 
   const novoHist = [
     ...hist,
@@ -76,7 +78,7 @@ async function pensarResposta(jid, textoCliente, nomeCliente) {
   ];
   historico.set(jid, novoHist.slice(-config.limiteHistorico));
 
-  return { texto, handoff, cardapio };
+  return { texto, handoff, cardapio, cartaSaques };
 }
 
 // ---------------------------------------------------------------------------
@@ -102,6 +104,20 @@ async function enviarCardapios(sock, jid) {
     });
     if (r?.key?.id) idsEnviadosPeloBot.add(r.key.id);
   }
+}
+
+async function enviarCartaSaques(sock, jid) {
+  const caminho = path.join(__dirname, 'cardapios', CARTA_SAQUES.arquivo);
+  if (!fs.existsSync(caminho)) {
+    console.warn(`⚠️  Carta de saques nao encontrada: ${caminho}`);
+    return;
+  }
+  const r = await sock.sendMessage(jid, {
+    document: fs.readFileSync(caminho),
+    fileName: CARTA_SAQUES.nome,
+    mimetype: 'application/pdf',
+  });
+  if (r?.key?.id) idsEnviadosPeloBot.add(r.key.id);
 }
 
 async function avisarEquipe(sock, jidCliente, nomeCliente, ultimaMsg) {
@@ -158,11 +174,15 @@ async function processar(sock, jid, nome) {
 
   try {
     await sock.sendPresenceUpdate('composing', jid); // "digitando..."
-    const { texto, handoff, cardapio } = await pensarResposta(jid, textoCliente, nome);
+    const { texto, handoff, cardapio, cartaSaques } = await pensarResposta(jid, textoCliente, nome);
     if (texto) await enviar(sock, jid, texto);
     if (cardapio) {
       await enviarCardapios(sock, jid);
       console.log(`🍣 Cardapios enviados -> ${jid}`);
+    }
+    if (cartaSaques) {
+      await enviarCartaSaques(sock, jid);
+      console.log(`🍶 Carta de saques enviada -> ${jid}`);
     }
     if (handoff) {
       await avisarEquipe(sock, jid, nome, textoCliente);
@@ -262,7 +282,7 @@ async function conectar() {
       if (!texto) {
         // audio / imagem sem legenda / figurinha -> nao sabemos ler, chama a atendente
         await enviar(sock, jid,
-          'Recebi sua mensagem! 😊 Vou chamar alguem da nossa equipe para te ajudar melhor. 🏮');
+          'Recebi sua mensagem. Vou chamar alguem da nossa equipe para te ajudar melhor.');
         await avisarEquipe(sock, jid, nome, '[mensagem de midia/audio]');
         pausar(jid, config.pausaHumanoMinutos);
         continue;
