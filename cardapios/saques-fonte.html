@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Carta de Saquês & Licores — Mori Izakaya</title>
+<style>
+  :root {
+    --paper:  #f5f0e5;
+    --card:   #fbf8f0;
+    --ink:    #23201a;
+    --soft:   #6a6153;
+    --faint:  #8f8674;
+    --line:   #ddd3c0;
+    --accent: #b23a2b;
+    --gold:   #8c6f33;
+  }
+  * { box-sizing: border-box; }
+
+  @page { size: A4; margin: 16mm; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: var(--ink);
+    font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+    line-height: 1.5;
+    font-size: 10.5pt;
+  }
+  .serif { font-family: "Hiragino Mincho ProN", "Yu Mincho", "Songti SC", Georgia, serif; }
+
+  /* Moldura de papel repetida em toda pagina (fica atras do conteudo).
+     Insets NEGATIVOS: o Chrome ancora fixed na area de conteudo (apos a
+     margem de @page), entao empurramos a moldura para FORA, rumo a borda. */
+  .frame {
+    position: fixed; top: -8mm; left: -8mm; right: -8mm; bottom: -8mm;
+    background: var(--paper); border: 2px solid var(--gold); z-index: 0;
+  }
+  .frame::after {
+    content: ""; position: absolute; top: 2mm; left: 2mm; right: 2mm; bottom: 2mm;
+    border: 0.75px solid var(--gold); opacity: .5;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 190mm; margin: 0 auto; padding: 2mm 0; }
+
+  /* Cabeçalho */
+  header { text-align: center; padding-bottom: 6mm; margin-bottom: 3mm; border-bottom: 2px solid var(--accent); }
+  .eyebrow { font-size: 8.5pt; letter-spacing: .34em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0 0 3mm; }
+  h1 { font-size: 30pt; font-weight: 500; margin: 0; letter-spacing: .01em; line-height: 1.1; }
+  h1 .amp { color: var(--accent); font-style: italic; }
+  .tagline { margin: 3mm 0 0; color: var(--soft); font-size: 10pt; letter-spacing: .04em; }
+
+  /* Seções */
+  .section-label {
+    display: flex; align-items: center; gap: 4mm;
+    font-size: 9.5pt; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin: 7mm 0 4mm; break-after: avoid;
+  }
+  .section-label::before, .section-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* Item */
+  .item { padding: 3.5mm 0; border-top: 1px solid var(--line); break-inside: avoid; }
+  .item:first-of-type { border-top: 0; }
+
+  .item-head { display: flex; align-items: baseline; gap: 3mm; }
+  .name-block { display: flex; align-items: baseline; gap: 2.5mm; flex-wrap: wrap; flex-shrink: 1; }
+  .item-name { font-size: 14pt; font-weight: 500; margin: 0; }
+  .kanji { font-size: 10pt; color: var(--accent); opacity: .85; letter-spacing: .06em;
+           font-family: "Hiragino Mincho ProN", "Hiragino Sans", "Yu Mincho", serif; }
+
+  .leader { flex: 1 1 auto; min-width: 8mm; align-self: center;
+            border-bottom: 1.2px dotted var(--line); transform: translateY(-2px); }
+
+  .prices { display: flex; gap: 6mm; flex-shrink: 0; text-align: right; }
+  .price { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+  .price .plabel { font-size: 7pt; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+  .price .pval { font-size: 11pt; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; margin-top: .5mm; }
+
+  .desc { margin: 2.5mm 0 0; color: var(--soft); font-size: 10pt; line-height: 1.6; max-width: 165mm; }
+  .desc b { color: var(--ink); font-weight: 600; }
+
+  /* Rodapé */
+  footer { margin-top: 9mm; padding-top: 4mm; border-top: 2px solid var(--accent); text-align: center; }
+  footer .cold { font-size: 9.5pt; color: var(--accent); font-weight: 600; letter-spacing: .04em; margin: 0 0 2.5mm; }
+  footer .info { font-size: 8.5pt; color: var(--faint); letter-spacing: .04em; margin: 0; line-height: 1.7; }
+</style>
+</head>
+<body>
+  <div class="frame" aria-hidden="true"></div>
+  <div class="page">
+    <header>
+      <p class="eyebrow">森 居酒屋 · Mori Izakaya</p>
+      <h1 class="serif">Saquês <span class="amp">&amp;</span> Licores</h1>
+      <p class="tagline">Importados diretamente do Japão · Servidos gelados</p>
+    </header>
+
+    <p class="section-label">Saquês</p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Beau Michelle</span><span class="kanji">ボー・ミッシェル</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 50ml</span><span class="pval">R$ 89,90</span></span>
+        </span>
+      </div>
+      <p class="desc">Da kura Tomono Shuzo, em Nagano, é <b>fermentado ao som de “Michelle”, dos Beatles</b> — o dono acredita que a música deixa o sabor mais macio. Leve e de baixa graduação, tem <b>doçura delicada e acidez viva</b>, lembrando um vinho branco. Servimos apenas em dose.</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Niida</span><span class="kanji">仁井田</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 50ml</span><span class="pval">R$ 59,90</span></span>
+          <span class="price"><span class="plabel">Garrafa 720ml</span><span class="pval">R$ 780,00</span></span>
+        </span>
+      </div>
+      <p class="desc">Da Niida Honke, kura de Fukushima <b>fundada em 1711</b> e hoje na 18ª geração da mesma família, que cultiva o próprio arroz sem agrotóxicos. Junmai natural de fermentação kimoto: <b>encorpado e macio</b>, com boa untuosidade e um leve toque de melão.</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Suigei “Baleia Bêbada”</span><span class="kanji">酔鯨</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 50ml</span><span class="pval">R$ 44,90</span></span>
+          <span class="price"><span class="plabel">Garrafa 720ml</span><span class="pval">R$ 550,00</span></span>
+        </span>
+      </div>
+      <p class="desc">De Kochi, a antiga província de Tosa, é um junmai <b>seco e refrescante</b>, de aroma discreto e final limpo — feito para acompanhar a comida. Leva o nome do senhor feudal Yamauchi Yodo, que se dizia “o bêbado do mar das baleias”.</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Gassan</span><span class="kanji">月山</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 50ml</span><span class="pval">R$ 49,90</span></span>
+          <span class="price"><span class="plabel">Garrafa 720ml</span><span class="pval">R$ 650,00</span></span>
+        </span>
+      </div>
+      <p class="desc">Da Yoshida Shuzo, em Shimane, que brassa há cerca de 300 anos aos pés do monte Gassan. Junmai <b>seco e de corpo médio</b>, de final limpo e aveludado. O nome vem do “barril de honra” que a família oferecia, todo ano, ao senhor feudal. (Mesma casa do licor Yuzumoon.)</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Miyako Homedry</span><span class="kanji">都ほまれ</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 75ml</span><span class="pval">R$ 34,90</span></span>
+          <span class="price"><span class="plabel">Garrafa 2L</span><span class="pval">R$ 650,00</span></span>
+        </span>
+      </div>
+      <p class="desc">Da tradicional Toa Shuzo, em Saitama, <b>fundada em 1625</b> — que também faz uísque japonês desde 1948. Saquê de mesa <b>seco, leve e refrescante</b>, com notas suaves de cereais e um final de umami que permanece.</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Kaori Junmai Licoroso</span><span class="kanji">薫り華やぐ純米酒</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 50ml</span><span class="pval">R$ 39,90</span></span>
+          <span class="price"><span class="plabel">Garrafa 900ml</span><span class="pval">R$ 480,00</span></span>
+        </span>
+      </div>
+      <p class="desc">Junmai incomum, <b>fermentado com levedura de vinho</b>, o que lhe dá <b>aroma floral e um paladar agridoce, doce e frutado</b> — mais perto de um vinho branco que de um saquê tradicional. (“Licoroso” é a categoria dos saquês doces.)</p>
+    </div>
+
+    <p class="section-label">Licores</p>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Licor Umeshu · Ajiwai</span><span class="kanji">あじわい梅酒</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 75ml</span><span class="pval">R$ 34,90</span></span>
+          <span class="price"><span class="plabel">Garrafa 2L</span><span class="pval">R$ 600,00</span></span>
+        </span>
+      </div>
+      <p class="desc">Licor da ameixa <b>ume</b> (parente do damasco) curtida em álcool com açúcar. O nosso, o Ajiwai, é <b>macio e aveludado — doce e levemente ácido</b>, de aroma frutado. Ótima porta de entrada para quem acha o saquê seco demais.</p>
+    </div>
+
+    <div class="item">
+      <div class="item-head">
+        <span class="name-block"><span class="item-name serif">Licor Yuzumoon</span><span class="kanji">月柚</span></span>
+        <span class="leader"></span>
+        <span class="prices">
+          <span class="price"><span class="plabel">Dose 50ml</span><span class="pval">R$ 74,90</span></span>
+          <span class="price"><span class="plabel">Garrafa 500ml</span><span class="pval">R$ 780,00</span></span>
+        </span>
+      </div>
+      <p class="desc">Licor de <b>yuzu</b> da Yoshida Shuzo, em Shimane — a mesma casa do Gassan. <b>Leve e refrescante</b>, de doçura delicada e acidez macia, com notas que lembram toranja. “Gassan” significa “Montanha da Lua” — daí “Yuzumoon”.</p>
+    </div>
+
+    <footer>
+      <p class="cold">Todos os saquês e licores são servidos gelados 🏮</p>
+      <p class="info">Rua São Luís, 105 — Adrianópolis, Manaus/AM · Instagram @izakaya.mori · WhatsApp (92) 99140-4897</p>
+    </footer>
+  </div>
+</body>
+</html>
