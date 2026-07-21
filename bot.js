@@ -70,7 +70,7 @@ function pausar(jid, minutos) {
 
 async function pensarResposta(jid, textoCliente, nomeCliente) {
   const hist = historico.get(jid) || [];
-  const { texto, handoff, cardapio, cartaSaques } = await responder(hist, textoCliente, nomeCliente);
+  const { texto, handoff, cardapio, cartaSaques, reservas } = await responder(hist, textoCliente, nomeCliente);
 
   const novoHist = [
     ...hist,
@@ -79,7 +79,7 @@ async function pensarResposta(jid, textoCliente, nomeCliente) {
   ];
   historico.set(jid, novoHist.slice(-config.limiteHistorico));
 
-  return { texto, handoff, cardapio, cartaSaques };
+  return { texto, handoff, cardapio, cartaSaques, reservas };
 }
 
 // ---------------------------------------------------------------------------
@@ -136,6 +136,29 @@ async function avisarEquipe(sock, jidCliente, nomeCliente, ultimaMsg) {
   await sock.sendMessage(config.grupoInternoJid, { text: aviso });
 }
 
+// "sab. 25/07 20:00" — rotulo curto da reserva para o aviso interno
+function rotuloDataHora(reserva) {
+  const d = new Date(`${reserva.data}T12:00:00Z`);
+  const dia = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: config.timezone, weekday: 'short', day: '2-digit', month: '2-digit',
+  }).format(d);
+  return `${dia} ${reserva.horario}`;
+}
+
+// Avisa o grupo interno que o Morinho confirmou uma reserva (para a equipe auditar
+// e organizar as mesas no painel). NAO e handoff: o bot nao pausa o chat.
+async function avisarReserva(sock, jidCliente, nomeCliente, reserva) {
+  if (!config.grupoInternoJid || config.grupoInternoJid.startsWith('PREENCHER')) return;
+  const numero = jidCliente.split('@')[0];
+  const aviso =
+    `📅 *Nova reserva* (o Morinho confirmou)\n\n` +
+    `${rotuloDataHora(reserva)} · ${reserva.pessoas} pessoa(s) · turno: ${reserva.turno}\n` +
+    `Em nome de: ${reserva.nome}\n` +
+    `Cliente: ${nomeCliente || 'sem nome'} (+${numero})\n\n` +
+    `Confira e organize as mesas no painel de reservas.`;
+  await sock.sendMessage(config.grupoInternoJid, { text: aviso });
+}
+
 // ---------------------------------------------------------------------------
 // Extrair texto de uma mensagem do WhatsApp
 // ---------------------------------------------------------------------------
@@ -175,7 +198,7 @@ async function processar(sock, jid, nome) {
 
   try {
     await sock.sendPresenceUpdate('composing', jid); // "digitando..."
-    const { texto, handoff, cardapio, cartaSaques } = await pensarResposta(jid, textoCliente, nome);
+    const { texto, handoff, cardapio, cartaSaques, reservas } = await pensarResposta(jid, textoCliente, nome);
     if (texto) await enviar(sock, jid, texto);
     if (cardapio) {
       await enviarCardapios(sock, jid);
@@ -184,6 +207,10 @@ async function processar(sock, jid, nome) {
     if (cartaSaques) {
       await enviarCartaSaques(sock, jid);
       console.log(`🍶 Carta de saques enviada -> ${jid}`);
+    }
+    if (reservas && reservas.length) {
+      for (const rv of reservas) await avisarReserva(sock, jid, nome, rv);
+      console.log(`📅 ${reservas.length} reserva(s) criada(s) -> ${jid}`);
     }
     if (handoff) {
       await avisarEquipe(sock, jid, nome, textoCliente);

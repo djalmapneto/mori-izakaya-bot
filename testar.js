@@ -35,9 +35,15 @@ function perguntar() {
     if (texto === '/limpar') { historico = []; console.log('🧹 Historico zerado.\n'); return perguntar(); }
 
     try {
-      const { texto: resposta, handoff, cardapio, usage } = await responder(historico, texto, nomeCliente);
+      const { texto: resposta, handoff, cardapio, cartaSaques, reservas, usage } = await responder(historico, texto, nomeCliente);
       console.log(`\n🤖 Bot: ${resposta}`);
       if (cardapio) console.log('   🍣 [enviaria os cardápios em PDF: cardapio, sushi, drinks]');
+      if (cartaSaques) console.log('   🍶 [enviaria a carta de saquês em PDF]');
+      if (reservas && reservas.length) {
+        for (const rv of reservas) {
+          console.log(`   📅 [reserva criada: ${rv.data} ${rv.horario}, ${rv.pessoas}p, em nome de ${rv.nome} — ${rv.status}]`);
+        }
+      }
       if (handoff) console.log('   🔔 [handoff: avisaria o grupo interno e pausaria o chat]');
       if (usage) {
         const lidoCache = usage.cache_read_input_tokens || 0;

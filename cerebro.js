@@ -8,6 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('./config.json');
+const reservas = require('./reservas');
 
 const API_URL = 'https://api.anthropic.com/v1/messages';
 
@@ -62,52 +63,49 @@ por ordem de chegada e ja ja vem falar com voce por aqui."
 Depois adicione EXATAMENTE a etiqueta <<HANDOFF>> no final (o cliente nao ve essa
 etiqueta; ela e um sinal interno).
 
-RESERVAS (regra especial — leia com atencao):
-As regras MUDAM conforme o dia da semana: sexta e sabado sao mais restritos que os
-demais dias. Entao a PRIMEIRA coisa a descobrir e QUE DIA DA SEMANA cai a data que o
-cliente pediu.
+RESERVAS (agora voce usa a AGENDA de verdade — leia com atencao):
+Voce tem DUAS ferramentas: "consultar_disponibilidade" e "criar_reserva". Elas olham a
+agenda real e ja aplicam TODAS as regras (dias, horarios, limite de grupo e o teto de
+lugares por turno). CONFIE nelas — nao decida "cabe ou nao cabe" de cabeca, nem invente
+horario ou disponibilidade.
 
-COMO DESCOBRIR O DIA DA SEMANA (isso e critico, leia com atencao): voce recebe, junto
-com a data de hoje, um CALENDARIO DOS PROXIMOS 30 DIAS ja calculado. PROCURE a data
-nessa lista e use o dia da semana que estiver la. NUNCA calcule o dia da semana de
-cabeca e NUNCA confie na sua memoria sobre calendarios — voce erra essa conta, e um
-dia da semana errado faz voce aplicar a regra de reserva errada. Se a data que o
-cliente pediu NAO estiver na lista (por exemplo, e daqui a varios meses), NAO invente
-o dia da semana: chame a ${config.atendenteNome} adicionando <<HANDOFF>> no final.
+DADOS NECESSARIOS: para reservar voce precisa de 4 coisas — DATA, NOME, HORARIO e
+QUANTAS PESSOAS. Se faltar alguma, pergunte de forma simpatica antes de seguir.
 
-Ao anotar, sempre escreva o dia da semana junto com a data (ex: "sexta, 05/08") —
-assim o cliente confere junto com voce.
+DATA E HORARIO no formato certo (importante para as ferramentas):
+- Para achar a data, use o CALENDARIO que voce recebe a cada mensagem. Cada dia vem
+  assim: "sexta-feira, 25/07/2026 [2026-07-25]". Ao chamar as ferramentas, passe a data
+  que esta ENTRE COLCHETES, no formato AAAA-MM-DD (ex.: 2026-07-25). NUNCA calcule dia da
+  semana nem data de cabeca. Se a data pedida NAO estiver no calendario (ex.: daqui a
+  varios meses), NAO invente: chame a ${config.atendenteNome} com <<HANDOFF>>.
+- O horario e no formato HH:MM em faixas de 15 min (ex.: 12:00, 12:15, 19:30).
 
-1) JANELAS QUE ACEITAM RESERVA. Se o cliente pedir fora delas, explique a regra com
-   gentileza e ofereca um horario que caiba:
-   - ALMOCO de domingo a quinta: das 11h as 14:30.
-   - ALMOCO de sexta e sabado: SOMENTE ate 12:15. Depois de 12:15 nao existe reserva
-     no almoco de sexta/sabado — e por ordem de chegada. Avise com carinho que
-     nesses dias o almoco lota e a partir das 12:15 o atendimento e por ordem de
-     chegada; se quiser, ofereca um horario ate 12:15.
-   - JANTAR de segunda a quinta: qualquer horario das 18h as 22h.
-   - JANTAR de sexta e sabado: SOMENTE ate 19:30.
-   - JANTAR de domingo: nao existe (nao ha jantar no domingo).
+O PASSO A PASSO:
+1) Com os 4 dados, chame "consultar_disponibilidade" (data, horario, pessoas).
+2) Se voltar disponivel = true: chame "criar_reserva" (data, horario, pessoas, nome e,
+   se souber, telefone). Se ela voltar ok = true, a reserva esta CONFIRMADA — avise o
+   cliente com naturalidade, ja confirmando (VOCE confirma na hora, nao depende de
+   ninguem). Diga o dia da semana junto com a data. Ex.: "Prontinho, sua reserva esta
+   confirmada: sexta, 25/07, as 20h, para 4 pessoas, em nome da Marina. Te esperamos!"
+   NAO adicione <<HANDOFF>> nesse caso.
+3) Se "consultar_disponibilidade" ou "criar_reserva" voltar disponivel/ok = false, NAO
+   diga que confirmou. Olhe o campo "motivo" e responda com gentileza:
+   - "grupo_grande": o grupo passou do limite daquele dia (10 na sexta/sabado, 15 nos
+     outros dias). Diga que para um grupo desse tamanho voce vai chamar a
+     ${config.atendenteNome} e adicione <<HANDOFF>> no final.
+   - "turno_cheio": aquele turno ja esta lotado de reservas. Avise com carinho e ofereca
+     outro dia ou o outro turno. Se o cliente insistir, chame a ${config.atendenteNome}
+     com <<HANDOFF>>.
+   - "fora_da_janela" ou "sem_turno": aquele horario/dia nao aceita reserva. Explique a
+     regra com gentileza e ofereca um horario que caiba (a ferramenta traz a janela).
+   - "horario_nao_e_slot": peca um horario "redondo" de 15 em 15 min (ex.: 20:00, 20:15).
+   - qualquer outro motivo ou "erro": chame a ${config.atendenteNome} com <<HANDOFF>>.
 
-2) LIMITE DE PESSOAS — ATENCAO, O NUMERO MUDA CONFORME O DIA:
-   - Sexta e sabado (almoco ou jantar): o limite e 10 PESSOAS.
-   - Domingo a quinta (almoco ou jantar): o limite e 15 PESSOAS.
-   DENTRO do limite -> voce ANOTA a reserva (ver item 4).
-   ACIMA do limite -> NAO anote; diga que vai chamar a ${config.atendenteNome} para
-   verificar a disponibilidade para um grupo grande, e adicione <<HANDOFF>> no final.
-
-3) Para reservar voce precisa de 4 dados: DATA, NOME, HORARIO e QUANTAS PESSOAS.
-   Se faltar algum, pergunte de forma simpatica antes de seguir.
-
-4) COMO ANOTAR (so quando esta dentro da janela E dentro do limite): com os 4 dados
-   em maos, anote e diga que a ${config.atendenteNome} ja ja confirma. Ex:
-   "Deixei sua reserva anotada: sexta, 05/08, 19h, 4 pessoas, em nome da Marina. A
-   ${config.atendenteNome} ja ja confirma pra voce." — e adicione EXATAMENTE
-   <<HANDOFF>> no final.
-
-5) Voce NUNCA confirma a reserva sozinho: voce anota e a ${config.atendenteNome}
-   confirma. (Fora do horario de atendimento, ainda pode anotar, mas em vez de
-   "ja ja confirma" diga que a ${config.atendenteNome} confirma assim que reabrir.)
+REGRAS DAS JANELAS (so para voce EXPLICAR ao cliente; quem DECIDE e a ferramenta):
+- Almoco domingo a quinta: 11h as 14:30 (ate 15 pessoas). Sexta e sabado: SO ate 12:15
+  (ate 10 pessoas); depois disso o almoco e por ordem de chegada.
+- Jantar segunda a quinta: 18h as 22h (ate 15 pessoas). Sexta e sabado: SO ate 19:30
+  (ate 10 pessoas). Domingo nao tem jantar.
 
 HORARIO DE PICO E ENCERRAMENTO DA COZINHA:
 Isso NAO bloqueia reserva nenhuma — e so um aviso carinhoso para o cliente nao ser
@@ -175,13 +173,18 @@ function agoraEmManaus() {
 // e quinta?"), e as regras de reserva dependem do dia da semana — entao entregamos
 // a resposta mastigada em vez de deixar ele calcular.
 function proximosDias(n = 30) {
-  const fmt = new Intl.DateTimeFormat('pt-BR', {
+  const fmtLabel = new Intl.DateTimeFormat('pt-BR', {
     timeZone: config.timezone,
     weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
   });
+  const fmtISO = new Intl.DateTimeFormat('en-CA', {
+    timeZone: config.timezone, year: 'numeric', month: '2-digit', day: '2-digit',
+  });
   const dias = [];
   for (let i = 0; i < n; i++) {
-    dias.push(fmt.format(new Date(Date.now() + i * 86400000)));
+    const d = new Date(Date.now() + i * 86400000);
+    // ex.: "sexta-feira, 25/07/2026 [2026-07-25]" — o colchete e o que vai nas ferramentas
+    dias.push(`${fmtLabel.format(d)} [${fmtISO.format(d)}]`);
   }
   return dias.join(' | ');
 }
@@ -198,29 +201,81 @@ function atendimentoDisponivel(agora = new Date()) {
   return hora >= config.atendimento.inicioHora && hora < fim;
 }
 
-/**
- * Recebe o historico ([{role, content}]), a mensagem do cliente e (opcional) o
- * nome do cliente. Retorna { texto, handoff, usage }.
- */
-async function responder(historico, textoCliente, nomeCliente = '') {
-  const mensagens = [...historico, { role: 'user', content: textoCliente }];
-  const nome = nomeCliente || 'desconhecido';
-  const atende = atendimentoDisponivel() ? 'DISPONIVEL' : 'INDISPONIVEL';
+// ---------------------------------------------------------------------------
+// Ferramentas (tool use) de reserva — o modelo chama, o codigo executa em reservas.js
+// ---------------------------------------------------------------------------
 
-  const corpo = {
-    model: config.modelo,
-    max_tokens: config.maxTokensResposta,
-    system: [
-      { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
-      { type: 'text', text: `Data e hora atuais em Manaus: ${agoraEmManaus()}. Nome do cliente neste chat: ${nome}. Atendimento humano agora: ${atende}.
+const FERRAMENTAS = [
+  {
+    name: 'consultar_disponibilidade',
+    description:
+      'Verifica se cabe uma reserva no dia/horario/tamanho pedido, ja aplicando as regras ' +
+      'do restaurante (janelas por dia, limite de grupo e teto de lugares por turno). Use ' +
+      'ANTES de criar. Retorna { disponivel } e, quando false, um "motivo".',
+    input_schema: {
+      type: 'object',
+      properties: {
+        data: { type: 'string', description: 'Data no formato AAAA-MM-DD (copie do calendario, entre colchetes).' },
+        horario: { type: 'string', description: 'Horario HH:MM em faixas de 15 min (ex.: 12:00, 19:30).' },
+        pessoas: { type: 'integer', description: 'Quantas pessoas.' },
+      },
+      required: ['data', 'horario', 'pessoas'],
+    },
+  },
+  {
+    name: 'criar_reserva',
+    description:
+      'Cria e CONFIRMA a reserva na agenda. Use quando ja tiver os 4 dados e a ' +
+      'disponibilidade estiver ok. Revalida por seguranca: se nao couber, retorna ' +
+      '{ ok: false, motivo } — nesse caso, nao diga que confirmou.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        data: { type: 'string', description: 'AAAA-MM-DD' },
+        horario: { type: 'string', description: 'HH:MM (faixa de 15 min)' },
+        pessoas: { type: 'integer' },
+        nome: { type: 'string', description: 'Nome de quem reserva.' },
+        telefone: { type: 'string', description: 'Telefone/WhatsApp, se souber (opcional).' },
+      },
+      required: ['data', 'horario', 'pessoas', 'nome'],
+    },
+  },
+];
 
-CALENDARIO DOS PROXIMOS 30 DIAS (ja calculado — use SEMPRE esta lista para saber o dia
-da semana de uma data; NUNCA calcule de cabeca):
-${proximosDias()}` },
-    ],
-    messages: mensagens,
-  };
+// Executa uma ferramenta pedida pelo modelo. Sempre retorna um objeto (nunca lanca)
+// para virar o "tool_result" da conversa.
+function executarFerramenta(nome, entrada = {}) {
+  try {
+    if (nome === 'consultar_disponibilidade') {
+      return reservas.consultarDisponibilidade(entrada.data, entrada.horario, Number(entrada.pessoas));
+    }
+    if (nome === 'criar_reserva') {
+      // Revalida por seguranca: nunca cria uma reserva que nao cabe.
+      const disp = reservas.consultarDisponibilidade(entrada.data, entrada.horario, Number(entrada.pessoas));
+      if (!disp.disponivel) return { ok: false, ...disp };
+      const nova = reservas.criarReserva({
+        data: entrada.data,
+        horario: entrada.horario,
+        pessoas: Number(entrada.pessoas),
+        nome: (entrada.nome || '').trim(),
+        telefone: (entrada.telefone || '').trim(),
+        origem: 'morinho',
+      });
+      return {
+        ok: true,
+        reserva: {
+          id: nova.id, data: nova.data, horario: nova.horario, turno: nova.turno,
+          pessoas: nova.pessoas, nome: nova.nome, status: nova.status,
+        },
+      };
+    }
+    return { erro: `ferramenta desconhecida: ${nome}` };
+  } catch (e) {
+    return { erro: String((e && e.message) || e) };
+  }
+}
 
+async function chamarClaude(systemBlocks, mensagens) {
   const resp = await fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -228,15 +283,62 @@ ${proximosDias()}` },
       'anthropic-version': '2023-06-01',
       'content-type': 'application/json',
     },
-    body: JSON.stringify(corpo),
+    body: JSON.stringify({
+      model: config.modelo,
+      max_tokens: config.maxTokensResposta,
+      system: systemBlocks,
+      tools: FERRAMENTAS,
+      messages: mensagens,
+    }),
   });
 
   if (!resp.ok) {
     const detalhe = await resp.text();
     throw new Error(`API respondeu ${resp.status}: ${detalhe.slice(0, 300)}`);
   }
+  return resp.json();
+}
 
-  const data = await resp.json();
+/**
+ * Recebe o historico ([{role, content}]), a mensagem do cliente e (opcional) o nome do
+ * cliente. Roda o "loop" de tool use (o modelo pode consultar a agenda e criar reservas)
+ * e retorna { texto, handoff, cardapio, cartaSaques, reservas, usage }.
+ */
+async function responder(historico, textoCliente, nomeCliente = '') {
+  const nome = nomeCliente || 'desconhecido';
+  const atende = atendimentoDisponivel() ? 'DISPONIVEL' : 'INDISPONIVEL';
+
+  const systemBlocks = [
+    { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
+    { type: 'text', text: `Data e hora atuais em Manaus: ${agoraEmManaus()}. Nome do cliente neste chat: ${nome}. Atendimento humano agora: ${atende}.
+
+CALENDARIO DOS PROXIMOS 30 DIAS (ja calculado — use SEMPRE esta lista; NUNCA calcule de
+cabeca). Cada dia traz a data entre colchetes no formato AAAA-MM-DD, que e o que voce
+passa para as ferramentas de reserva:
+${proximosDias()}` },
+  ];
+
+  const mensagens = [...historico, { role: 'user', content: textoCliente }];
+  const reservasCriadas = [];
+  let data;
+
+  // O modelo pode pedir ferramentas antes de dar a resposta final. Enquanto ele pedir
+  // (stop_reason === 'tool_use'), executamos e devolvemos o resultado, ate ele concluir.
+  for (let volta = 0; volta < 6; volta++) {
+    data = await chamarClaude(systemBlocks, mensagens);
+    if (data.stop_reason !== 'tool_use') break;
+
+    mensagens.push({ role: 'assistant', content: data.content });
+    const resultados = [];
+    for (const bloco of data.content || []) {
+      if (bloco.type !== 'tool_use') continue;
+      const saida = executarFerramenta(bloco.name, bloco.input || {});
+      if (bloco.name === 'criar_reserva' && saida.ok) reservasCriadas.push(saida.reserva);
+      resultados.push({ type: 'tool_result', tool_use_id: bloco.id, content: JSON.stringify(saida) });
+    }
+    mensagens.push({ role: 'user', content: resultados });
+  }
+
   const bruto = (data.content || [])
     .filter((b) => b.type === 'text')
     .map((b) => b.text)
@@ -252,7 +354,7 @@ ${proximosDias()}` },
     .replace(/<<CARTA_SAQUES>>/g, '')
     .trim();
 
-  return { texto, handoff, cardapio, cartaSaques, usage: data.usage };
+  return { texto, handoff, cardapio, cartaSaques, reservas: reservasCriadas, usage: data.usage };
 }
 
 module.exports = { responder, SYSTEM_PROMPT };
