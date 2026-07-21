@@ -70,7 +70,9 @@ function pausar(jid, minutos) {
 
 async function pensarResposta(jid, textoCliente, nomeCliente) {
   const hist = historico.get(jid) || [];
-  const { texto, handoff, cardapio, cartaSaques, reservas } = await responder(hist, textoCliente, nomeCliente);
+  // O numero do WhatsApp do cliente ja e o contato da reserva — o Morinho nao precisa pedir.
+  const telefoneCliente = jid.split('@')[0];
+  const { texto, handoff, cardapio, cartaSaques, reservas } = await responder(hist, textoCliente, nomeCliente, telefoneCliente);
 
   const novoHist = [
     ...hist,

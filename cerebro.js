@@ -69,8 +69,31 @@ agenda real e ja aplicam TODAS as regras (dias, horarios, limite de grupo e o te
 lugares por turno). CONFIE nelas — nao decida "cabe ou nao cabe" de cabeca, nem invente
 horario ou disponibilidade.
 
-DADOS NECESSARIOS: para reservar voce precisa de 4 coisas — DATA, NOME, HORARIO e
-QUANTAS PESSOAS. Se faltar alguma, pergunte de forma simpatica antes de seguir.
+DADOS NECESSARIOS: para reservar voce precisa de 4 coisas — DATA, HORARIO, QUANTAS
+PESSOAS e o NOME da reserva.
+
+PECA TUDO DE UMA VEZ SO. Assim que o cliente demonstrar que quer reservar, peca as 4
+informacoes numa unica mensagem, em lista, para a conversa nao ficar longa. Ex.:
+"Claro! Me manda numa mensagem so:
+1. *Que dia?*
+2. *Que horario?*
+3. *Quantas pessoas?*
+4. *Nome da reserva?*"
+Se o cliente ja tiver dito alguma delas, NAO pergunte de novo — peca so o que falta,
+tambem numa mensagem so. Nunca pergunte um dado de cada vez.
+
+REGRA DE OURO: assim que souber DATA, HORARIO e PESSOAS, chame "consultar_disponibilidade"
+ANTES de escrever qualquer resposta — mesmo que o nome ainda falte. Nao adianta pedir o
+nome de uma reserva que talvez nem caiba.
+Cliente: "24/07 as 12:30, 6 pessoas"
+- ERRADO: "Perfeito! So me falta o nome." (voce nem olhou a agenda)
+- ERRADO: "Me confirma o nome e ja checo a disponibilidade." (checar e AGORA, nao depois)
+- CERTO: chamar consultar_disponibilidade(2026-07-24, 12:30, 6) e SO ENTAO responder —
+  se couber: "Tem vaga! Qual o nome da reserva?"; se nao couber: explicar e oferecer
+  alternativa, sem pedir nome.
+
+NAO PECA TELEFONE. Voce ja esta falando com o cliente pelo WhatsApp, e o numero dele
+entra na reserva automaticamente. Nunca pergunte telefone, WhatsApp ou contato.
 
 DATA E HORARIO no formato certo (importante para as ferramentas):
 - Para achar a data, use o CALENDARIO que voce recebe a cada mensagem. Cada dia vem
@@ -81,9 +104,12 @@ DATA E HORARIO no formato certo (importante para as ferramentas):
 - O horario e no formato HH:MM em faixas de 15 min (ex.: 12:00, 12:15, 19:30).
 
 O PASSO A PASSO:
-1) Com os 4 dados, chame "consultar_disponibilidade" (data, horario, pessoas).
-2) Se voltar disponivel = true: chame "criar_reserva" (data, horario, pessoas, nome e,
-   se souber, telefone). Se ela voltar ok = true, a reserva esta CONFIRMADA — avise o
+1) Assim que tiver DATA, HORARIO e PESSOAS — mesmo que o NOME ainda falte — chame logo
+   "consultar_disponibilidade". Nao espere o nome para conferir a agenda: se o horario
+   nao couber, o cliente precisa saber JA, e nao depois de dar o nome. Se faltar so o
+   nome e o horario couber, peca o nome dizendo que tem vaga.
+2) Se voltar disponivel = true: chame "criar_reserva" (data, horario, pessoas e nome).
+   Se ela voltar ok = true, a reserva esta CONFIRMADA — avise o
    cliente com naturalidade, ja confirmando (VOCE confirma na hora, nao depende de
    ninguem). Diga o dia da semana junto com a data. Ex.: "Prontinho, sua reserva esta
    confirmada: sexta, 25/07, as 20h, para 4 pessoas, em nome da Marina. Te esperamos!"
@@ -225,7 +251,8 @@ const FERRAMENTAS = [
   {
     name: 'criar_reserva',
     description:
-      'Cria e CONFIRMA a reserva na agenda. Use quando ja tiver os 4 dados e a ' +
+      'Cria e CONFIRMA a reserva na agenda. O telefone do cliente entra sozinho (e o '
+      + 'numero do WhatsApp) — nao peca. Use quando ja tiver os 4 dados e a ' +
       'disponibilidade estiver ok. Revalida por seguranca: se nao couber, retorna ' +
       '{ ok: false, motivo } — nesse caso, nao diga que confirmou.',
     input_schema: {
@@ -235,7 +262,6 @@ const FERRAMENTAS = [
         horario: { type: 'string', description: 'HH:MM (faixa de 15 min)' },
         pessoas: { type: 'integer' },
         nome: { type: 'string', description: 'Nome de quem reserva.' },
-        telefone: { type: 'string', description: 'Telefone/WhatsApp, se souber (opcional).' },
       },
       required: ['data', 'horario', 'pessoas', 'nome'],
     },
@@ -244,7 +270,7 @@ const FERRAMENTAS = [
 
 // Executa uma ferramenta pedida pelo modelo. Sempre retorna um objeto (nunca lanca)
 // para virar o "tool_result" da conversa.
-function executarFerramenta(nome, entrada = {}) {
+function executarFerramenta(nome, entrada = {}, telefoneCliente = '') {
   try {
     if (nome === 'consultar_disponibilidade') {
       return reservas.consultarDisponibilidade(entrada.data, entrada.horario, Number(entrada.pessoas));
@@ -258,7 +284,7 @@ function executarFerramenta(nome, entrada = {}) {
         horario: entrada.horario,
         pessoas: Number(entrada.pessoas),
         nome: (entrada.nome || '').trim(),
-        telefone: (entrada.telefone || '').trim(),
+        telefone: telefoneCliente.trim(),
         origem: 'morinho',
       });
       return {
@@ -304,7 +330,7 @@ async function chamarClaude(systemBlocks, mensagens) {
  * cliente. Roda o "loop" de tool use (o modelo pode consultar a agenda e criar reservas)
  * e retorna { texto, handoff, cardapio, cartaSaques, reservas, usage }.
  */
-async function responder(historico, textoCliente, nomeCliente = '') {
+async function responder(historico, textoCliente, nomeCliente = '', telefoneCliente = '') {
   const nome = nomeCliente || 'desconhecido';
   const atende = atendimentoDisponivel() ? 'DISPONIVEL' : 'INDISPONIVEL';
 
@@ -332,7 +358,7 @@ ${proximosDias()}` },
     const resultados = [];
     for (const bloco of data.content || []) {
       if (bloco.type !== 'tool_use') continue;
-      const saida = executarFerramenta(bloco.name, bloco.input || {});
+      const saida = executarFerramenta(bloco.name, bloco.input || {}, telefoneCliente);
       if (bloco.name === 'criar_reserva' && saida.ok) reservasCriadas.push(saida.reserva);
       resultados.push({ type: 'tool_result', tool_use_id: bloco.id, content: JSON.stringify(saida) });
     }
