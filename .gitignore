@@ -8,5 +8,10 @@ auth/
 credentials.json
 .env
 
+# banco de reservas (dados locais/producao) — nao versionar
+reservas.db
+reservas.db-shm
+reservas.db-wal
+
 # sistema
 .DS_Store

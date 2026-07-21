@@ -13,5 +13,51 @@
   "debounceSegundos": 5,
   "pausaHumanoMinutos": 40,
   "limiteHistorico": 12,
-  "maxTokensResposta": 1024
+  "maxTokensResposta": 1024,
+
+  "reservas": {
+    "tetoPorTurno": 30,
+    "toleranciaAtrasoMin": 10,
+    "intervaloSlotMin": 15,
+    "janelas": {
+      "almoco": {
+        "dias": { "0": "domQui", "1": "domQui", "2": "domQui", "3": "domQui", "4": "domQui", "5": "sexSab", "6": "sexSab" },
+        "grupos": {
+          "domQui": { "inicio": "11:00", "fim": "14:30", "limitePessoas": 15 },
+          "sexSab": { "inicio": "11:00", "fim": "12:15", "limitePessoas": 10 }
+        }
+      },
+      "jantar": {
+        "dias": { "0": null, "1": "segQui", "2": "segQui", "3": "segQui", "4": "segQui", "5": "sexSab", "6": "sexSab" },
+        "grupos": {
+          "segQui": { "inicio": "18:00", "fim": "22:00", "limitePessoas": 15 },
+          "sexSab": { "inicio": "18:00", "fim": "19:30", "limitePessoas": 10 }
+        }
+      }
+    },
+    "salao": {
+      "capacidadeFisicaAlmoco": 62,
+      "capacidadeFisicaJantar": 68,
+      "mesas": [
+        { "nome": "1", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "2", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "3", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "4", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "5", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "6", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "7", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "8", "area": "Booth Lateral 1", "lugares": 4 },
+        { "nome": "9", "area": "Centro", "lugares": 2, "lugaresMax": 3 },
+        { "nome": "10", "area": "Centro", "lugares": 2, "lugaresMax": 3 },
+        { "nome": "11", "area": "Centro", "lugares": 2, "lugaresMax": 3 },
+        { "nome": "12", "area": "Centro", "lugares": 2, "lugaresMax": 3 },
+        { "nome": "13", "area": "Centro", "lugares": 2, "lugaresMax": 3 },
+        { "nome": "14", "area": "Booth Lateral 2", "lugares": 4 },
+        { "nome": "15", "area": "Booth Lateral 2", "lugares": 4 },
+        { "nome": "16", "area": "Booth Lateral 2", "lugares": 4 },
+        { "nome": "17", "area": "Mesa redonda", "lugares": 6, "apenasJantar": true },
+        { "nome": "Balcao", "area": "Balcao", "lugares": 8 }
+      ]
+    }
+  }
 }
