@@ -7,7 +7,8 @@
   "scripts": {
     "teste": "node --env-file=.env testar.js",
     "start": "node --env-file=.env bot.js",
-    "grupos": "node --env-file=.env bot.js --listar-grupos"
+    "grupos": "node --env-file=.env bot.js --listar-grupos",
+    "painel": "node --env-file=.env painel.js"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.9",
