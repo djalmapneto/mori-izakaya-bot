@@ -25,6 +25,7 @@ const pino = require('pino');
 
 const config = require('./config.json');
 const { responder } = require('./cerebro');
+const { iniciarPainel } = require('./painel');
 
 // Cardapios (PDFs) enviados quando o cliente pede o menu
 const CARDAPIOS = [
@@ -292,6 +293,10 @@ async function conectar() {
     }
   });
 }
+
+// Sobe o painel de reservas (pagina web da equipe) junto com o bot.
+// So liga se PAINEL_SENHA estiver definido no .env; senao, apenas avisa e segue.
+if (!LISTAR_GRUPOS) iniciarPainel();
 
 conectar().catch((err) => {
   console.error('❌ Erro fatal:', err.message || err);
