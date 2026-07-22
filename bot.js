@@ -271,6 +271,25 @@ async function processar(sock, jid, nome) {
 // Conexao Baileys
 // ---------------------------------------------------------------------------
 
+/**
+ * REDE 1: reconecta sem deixar erro escapar.
+ *
+ * Antes era `setTimeout(conectar, 3000)` — e `conectar` e assincrona. Se a propria
+ * tentativa de reconexao falhasse (internet oscilando, WhatsApp fora do ar), o erro
+ * ficava solto e o Node MATAVA o processo. Foi a causa provavel das ~800 mortes em
+ * ~1100 quedas de conexao. Agora a falha e registrada e tentamos de novo, esperando
+ * cada vez um pouco mais (3s, 6s, 12s... ate 1 min) para nao martelar o WhatsApp.
+ */
+function reconectar(segundos = 3) {
+  console.log(`🔄 Reconectando em ${segundos}s...`);
+  setTimeout(() => {
+    conectar().catch((err) => {
+      console.error('❌ Falhou ao reconectar:', err.message || err);
+      reconectar(Math.min(segundos * 2, 60));
+    });
+  }, segundos * 1000);
+}
+
 async function conectar() {
   const { state, saveCreds } = await useMultiFileAuthState('auth');
   const { version } = await fetchLatestBaileysVersion();
@@ -316,12 +335,23 @@ async function conectar() {
         console.error('❌ Sessao encerrada. Apague a pasta "auth" e escaneie o QR de novo.');
         process.exit(1);
       }
-      console.log('🔄 Reconectando em 3s...');
-      setTimeout(conectar, 3000);
+      reconectar();
     }
   });
 
-  sock.ev.on('messages.upsert', async ({ messages, type }) => {
+  // REDE 2: qualquer erro ao tratar uma mensagem (tipicamente um envio que falha
+  // logo depois da conexao cair) ficava solto e derrubava o processo INTEIRO.
+  // Agora fica preso aqui: registramos e seguimos para a proxima mensagem.
+  sock.ev.on('messages.upsert', async (evento) => {
+    try {
+      await tratarMensagens(sock, evento);
+    } catch (err) {
+      console.error('❌ Erro ao tratar mensagem recebida:', err.message || err);
+    }
+  });
+}
+
+async function tratarMensagens(sock, { messages, type }) {
     if (type !== 'notify') return;
 
     for (const msg of messages) {
@@ -370,12 +400,22 @@ async function conectar() {
 
       agendarProcessamento(sock, jid, nome, texto);
     }
-  });
 }
 
 // So liga o bot de verdade quando este arquivo e EXECUTADO (npm start / pm2).
 // Se for apenas importado (testes), nada conecta — da para testar as funcoes puras.
 if (require.main === module) {
+  // REDE 3: a ultima. Se algum erro ainda escapar de tudo (o Baileys tem erros
+  // esporadicos de socket e de criptografia), ANOTAMOS o motivo e seguimos vivos,
+  // em vez de morrer calado. Antes o log so mostrava "erros fatais: 0" e o bot
+  // sumia sem deixar pista. Se algo aparecer aqui, e o proximo a investigar.
+  process.on('unhandledRejection', (motivo) => {
+    console.error('⚠️  Promessa rejeitada sem tratamento:', motivo?.message || motivo);
+  });
+  process.on('uncaughtException', (err) => {
+    console.error('⚠️  Excecao nao tratada:', err?.message || err, '\n', err?.stack || '');
+  });
+
   // Sobe o painel de reservas (pagina web da equipe) junto com o bot.
   // So liga se PAINEL_SENHA estiver definido no .env; senao, apenas avisa e segue.
   if (!LISTAR_GRUPOS) iniciarPainel();
@@ -386,4 +426,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { classificarMensagem, desembrulhar };
+module.exports = { classificarMensagem, desembrulhar, tratarMensagens, estaPausado };
