@@ -9,6 +9,7 @@
  * Usa reservas.js para tudo — aqui so tem tela e rotas.
  */
 
+const os = require('os');
 const express = require('express');
 const config = require('./config.json');
 const r = require('./reservas');
@@ -364,7 +365,16 @@ function iniciarPainel(porta = PORTA_PADRAO) {
   });
 
   const server = app.listen(porta, () => {
-    console.log(`📅 Painel de reservas em http://localhost:${porta}`);
+    // Mostra os enderecos DE VERDADE. Antes so dizia "localhost", o que confunde
+    // quem le o log da VPS: para ela, "localhost" e ela mesma. O painel escuta em
+    // todas as interfaces, entao a equipe entra pelo IP publico do servidor.
+    const naRede = Object.values(os.networkInterfaces())
+      .flat()
+      .filter((i) => i.family === 'IPv4' && !i.internal)
+      .map((i) => `http://${i.address}:${porta}`);
+    console.log(`📅 Painel de reservas no ar (porta ${porta}):`);
+    console.log(`   neste computador:  http://localhost:${porta}`);
+    for (const url of naRede) console.log(`   pela rede/internet: ${url}`);
   });
   return server;
 }
