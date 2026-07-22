@@ -10,7 +10,7 @@
 
   "atendimento": { "inicioHora": 10, "fimHora": 23, "domingoFimHora": 15 },
 
-  "debounceSegundos": 5,
+  "debounceSegundos": 8,
   "pausaHumanoMinutos": 40,
   "limiteHistorico": 12,
   "maxTokensResposta": 1024,
@@ -19,6 +19,7 @@
     "tetoPorTurno": 30,
     "toleranciaAtrasoMin": 10,
     "intervaloSlotMin": 15,
+    "antecedenciaMinimaMin": 60,
     "janelas": {
       "almoco": {
         "dias": { "0": "domQui", "1": "domQui", "2": "domQui", "3": "domQui", "4": "domQui", "5": "sexSab", "6": "sexSab" },

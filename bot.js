@@ -165,16 +165,58 @@ async function avisarReserva(sock, jidCliente, nomeCliente, reserva) {
 // Extrair texto de uma mensagem do WhatsApp
 // ---------------------------------------------------------------------------
 
-function extrairTexto(msg) {
-  const m = msg.message;
-  if (!m) return null;
-  return (
+// Midia de verdade: coisas que o cliente MANDOU e que nao sabemos ler. So essas
+// justificam chamar a equipe.
+const TIPOS_MIDIA = [
+  'audioMessage', 'imageMessage', 'videoMessage', 'documentMessage',
+  'ptvMessage', 'contactMessage', 'contactsArrayMessage',
+  'locationMessage', 'liveLocationMessage',
+];
+
+// Envelopes que ESCONDEM a mensagem real dentro (mensagem temporaria, "ver uma vez",
+// documento com legenda). Sem desembrulhar, um texto normal parecia "midia".
+function desembrulhar(m, profundidade = 0) {
+  if (!m || profundidade > 4) return m;
+  const dentro =
+    m.ephemeralMessage?.message ||
+    m.viewOnceMessage?.message ||
+    m.viewOnceMessageV2?.message ||
+    m.viewOnceMessageV2Extension?.message ||
+    m.documentWithCaptionMessage?.message ||
+    m.editedMessage?.message?.protocolMessage?.editedMessage;
+  return dentro ? desembrulhar(dentro, profundidade + 1) : m;
+}
+
+/**
+ * Classifica o que chegou: { tipo: 'texto' | 'midia' | 'ignorar', texto, rotulo }.
+ *
+ * Antes, TUDO que nao tinha texto virava "midia" -> o bot mandava "vou chamar alguem
+ * da equipe", avisava o grupo e ficava mudo 40 min. So que caiam nessa peneira reacoes
+ * (👍), avisos internos do WhatsApp e mensagens que falharam de descriptografar (os
+ * "Bad MAC" do log) — alarme falso que deixava o cliente no vacuo. Agora so e "midia"
+ * o que o cliente realmente mandou e nao sabemos ler; o resto e ignorado em silencio.
+ */
+function classificarMensagem(msg) {
+  const m = desembrulhar(msg.message);
+  if (!m) return { tipo: 'ignorar', rotulo: 'sem conteudo (falha ao descriptografar?)' };
+
+  const texto =
     m.conversation ||
     m.extendedTextMessage?.text ||
     m.imageMessage?.caption ||
     m.videoMessage?.caption ||
-    null
-  );
+    m.documentMessage?.caption ||
+    m.buttonsResponseMessage?.selectedDisplayText ||
+    m.listResponseMessage?.title ||
+    m.templateButtonReplyMessage?.selectedDisplayText ||
+    null;
+  if (texto && texto.trim()) return { tipo: 'texto', texto: texto.trim() };
+
+  const tipo = TIPOS_MIDIA.find((t) => m[t]);
+  if (tipo) return { tipo: 'midia', rotulo: tipo };
+
+  // reacoes, figurinhas, enquetes, protocolo (apagar/editar), chaves de sessao...
+  return { tipo: 'ignorar', rotulo: Object.keys(m)[0] || 'desconhecido' };
 }
 
 // ---------------------------------------------------------------------------
@@ -306,15 +348,23 @@ async function conectar() {
 
       if (estaPausado(jid)) continue;
 
-      const texto = extrairTexto(msg);
       const nome = msg.pushName;
+      const { tipo, texto, rotulo } = classificarMensagem(msg);
 
-      if (!texto) {
-        // audio / imagem sem legenda / figurinha -> nao sabemos ler, chama a atendente
+      if (tipo === 'ignorar') {
+        // reacao, figurinha, aviso do WhatsApp, falha de decriptacao... nao e pergunta
+        // de cliente: nao respondemos e nao incomodamos a equipe.
+        console.log(`🔇 Ignorado (${rotulo}) de ${jid}`);
+        continue;
+      }
+
+      if (tipo === 'midia') {
+        // audio / imagem sem legenda / documento -> nao sabemos ler, chama a atendente
         await enviar(sock, jid,
           'Recebi sua mensagem. Vou chamar alguem da nossa equipe para te ajudar melhor.');
-        await avisarEquipe(sock, jid, nome, '[mensagem de midia/audio]');
+        await avisarEquipe(sock, jid, nome, `[${rotulo}]`);
         pausar(jid, config.pausaHumanoMinutos);
+        console.log(`🎧 Midia (${rotulo}) -> handoff em ${jid}`);
         continue;
       }
 
@@ -323,11 +373,17 @@ async function conectar() {
   });
 }
 
-// Sobe o painel de reservas (pagina web da equipe) junto com o bot.
-// So liga se PAINEL_SENHA estiver definido no .env; senao, apenas avisa e segue.
-if (!LISTAR_GRUPOS) iniciarPainel();
+// So liga o bot de verdade quando este arquivo e EXECUTADO (npm start / pm2).
+// Se for apenas importado (testes), nada conecta — da para testar as funcoes puras.
+if (require.main === module) {
+  // Sobe o painel de reservas (pagina web da equipe) junto com o bot.
+  // So liga se PAINEL_SENHA estiver definido no .env; senao, apenas avisa e segue.
+  if (!LISTAR_GRUPOS) iniciarPainel();
 
-conectar().catch((err) => {
-  console.error('❌ Erro fatal:', err.message || err);
-  process.exit(1);
-});
+  conectar().catch((err) => {
+    console.error('❌ Erro fatal:', err.message || err);
+    process.exit(1);
+  });
+}
+
+module.exports = { classificarMensagem, desembrulhar };

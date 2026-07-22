@@ -65,6 +65,21 @@ function diaSemanaIndice(data) {
   return { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[nome];
 }
 
+// "Agora" no fuso de Manaus, ja mastigado: { data: 'YYYY-MM-DD', minutos: 1045 }.
+// Existe porque a agenda precisa saber que horas sao para nao aceitar reserva de um
+// horario que ja passou (ou que esta em cima da hora demais).
+function agoraEmManaus(instante = new Date()) {
+  const p = new Intl.DateTimeFormat('en-CA', {
+    timeZone: config.timezone,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).formatToParts(instante);
+  const v = (t) => p.find((x) => x.type === t).value;
+  let hora = Number(v('hour'));
+  if (hora === 24) hora = 0; // meia-noite vem como "24" em alguns ambientes
+  return { data: `${v('year')}-${v('month')}-${v('day')}`, minutos: hora * 60 + Number(v('minute')) };
+}
+
 // Almoco de manha/inicio da tarde; jantar a noite. A fronteira (16h) cai num vao
 // sem reserva (entre o fim do almoco 14:30 e o inicio do jantar 18h), entao qualquer
 // horario "no meio" e barrado depois pela checagem de janela.
@@ -129,19 +144,25 @@ function resumoTurno(data, turno) {
 // A pergunta central: cabe esta reserva?
 // ---------------------------------------------------------------------------
 /**
- * Decide se uma reserva pode ser feita, na ordem: formato -> turno existe no dia ->
- * dentro da janela -> horario e uma faixa valida -> grupo dentro do limite -> ha vaga
- * no teto do turno. Retorna { disponivel, motivo, ... }.
+ * Decide se uma reserva pode ser feita, na ordem: formato -> data nao passou ->
+ * turno existe no dia -> dentro da janela -> horario e uma faixa valida -> grupo
+ * dentro do limite -> antecedencia minima -> ha vaga no teto do turno.
+ * Retorna { disponivel, motivo, ... }.
+ *
+ * O relogio entra aqui porque o modelo NAO sabe julgar "ainda da tempo?" — ele ja
+ * errou isso em producao (recusou um jantar as 17:25 dizendo que era tarde, quando o
+ * jantar nem tinha aberto). Quem decide passa a ser esta funcao.
  *
  * motivos possiveis quando disponivel=false:
- *  data_invalida | horario_invalido | pessoas_invalido | sem_turno |
- *  fora_da_janela | horario_nao_e_slot | grupo_grande | turno_cheio
+ *  data_invalida | horario_invalido | pessoas_invalido | data_no_passado | sem_turno |
+ *  fora_da_janela | horario_nao_e_slot | grupo_grande | horario_muito_em_cima | turno_cheio
  */
-function consultarDisponibilidade(data, horario, pessoas) {
+function consultarDisponibilidade(data, horario, pessoas, agora = agoraEmManaus()) {
   if (!RE_DATA.test(data)) return { disponivel: false, motivo: 'data_invalida' };
   if (!RE_HORARIO.test(horario)) return { disponivel: false, motivo: 'horario_invalido' };
   pessoas = Number(pessoas);
   if (!Number.isInteger(pessoas) || pessoas < 1) return { disponivel: false, motivo: 'pessoas_invalido' };
+  if (data < agora.data) return { disponivel: false, motivo: 'data_no_passado', hoje: agora.data };
 
   const turno = turnoDoHorario(horario);
   const regra = regraDaData(data, turno);
@@ -156,6 +177,19 @@ function consultarDisponibilidade(data, horario, pessoas) {
   }
   if (pessoas > regra.limitePessoas) {
     return { disponivel: false, motivo: 'grupo_grande', turno, limitePessoas: regra.limitePessoas };
+  }
+
+  // Reserva para HOJE precisa de um respiro para a cozinha e o salao se organizarem.
+  if (data === agora.data && t < agora.minutos + R.antecedenciaMinimaMin) {
+    const proximo = slotsDoDia(data, turno).find((s) => paraMinutos(s) >= agora.minutos + R.antecedenciaMinimaMin);
+    return {
+      disponivel: false,
+      motivo: 'horario_muito_em_cima',
+      turno,
+      antecedenciaMinimaMin: R.antecedenciaMinimaMin,
+      horaAgora: `${String(Math.floor(agora.minutos / 60)).padStart(2, '0')}:${String(agora.minutos % 60).padStart(2, '0')}`,
+      proximoHorarioPossivelHoje: proximo || null,
+    };
   }
 
   const reservado = somaPessoasTurno(data, turno);
@@ -235,4 +269,5 @@ module.exports = {
   regraDaData,
   turnoDoHorario,
   diaSemanaIndice,
+  agoraEmManaus,
 };
