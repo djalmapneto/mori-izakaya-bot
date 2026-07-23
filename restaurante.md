@@ -8,8 +8,8 @@
 - Nome: Mori Izakaya (森 居酒屋)
 - Descrição: Izakaya japonês em Manaus, especializado em experiências com atum
   Bluefin, sushis, pratos quentes e drinks autorais. Chef Jhon.
-- Tom de voz do bot: acolhedor, elegante e objetivo. Emojis com muita parcimônia
-  (na maioria das respostas, nenhum; no máximo 1 quando fizer sentido).
+- Tom de voz do bot: acolhedor, elegante e objetivo. Emojis com moderação — 1 quando
+  soma (saudação, reserva confirmada, agradecimento), sem exagero e nunca vários juntos.
 
 ## Horário de funcionamento
 > ⚠️ NÃO confundir com a janela de RESERVA (seção "Reservas"). Aqui é quando o
@@ -404,10 +404,11 @@ refrescante, de doçura delicada e acidez macia**, com notas que lembram toranja
 - Abertura ao vivo de um atum Bluefin de ~100 kg, ritual tradicional japonês
   conduzido pelo Chef Jhon e convidados especiais.
 - Seguida de jantar degustação exclusivo com cortes frescos do Bluefin.
-- Próxima data: 29 de julho (quarta-feira), 19h30.
-- Valor: R$ 600 por pessoa. Vagas limitadas (por ordem de confirmação).
+- Próxima data: **1º de outubro (quinta-feira), 19h30** — celebração do **1 ano
+  do Mori Izakaya**.
+- Valor: R$ 650 por pessoa. Vagas limitadas (por ordem de confirmação).
 - Para confirmar participação → chamar a atendente.
-- ⚠️ EVENTO COM DATA FIXA — atualizar/remover após a data passar.
+- ⚠️ EVENTO COM DATA FIXA — atualizar/remover após a data passar (01/10/2026).
 
 ---
 
