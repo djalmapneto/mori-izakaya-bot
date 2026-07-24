@@ -100,6 +100,8 @@ No almoço o cliente tem **duas opções** e escolhe a que preferir:
 - Se o cliente perguntar se os adicionais (kushiyakis, sashimis, hand rolls,
   tempurás, baos) têm custo extra, a resposta é: NÃO, estão inclusos no Festival
   do Mori; é só pedir ao garçom que eles preparam fresquinho na hora.
+- O Festival inclui também a **sobremesa do dia**, que varia (mousses, pudins, tortas
+  e outras) — ver a seção "Sobremesas".
 
 ### 2) À la carte no almoço
 - No almoço também servimos **à la carte**: o cliente pode pedir os pratos do
@@ -207,9 +209,26 @@ No almoço o cliente tem **duas opções** e escolhe a que preferir:
 - Combo San — R$ 87,90 — pirarucu sando + 2 tebasakis + 2 futomakis
 
 ## Sobremesas
-- Cheesecake Chocolate — R$ 29,90
-- Creme Chinês — R$ 29,90 — doce clássico, suave e delicado
-- Sakura Cake — R$ 29,90 — bolo inspirado na flor de cerejeira
+> ⚠️ ESTA é a lista atual (atualizada em 23/07/2026). As sobremesas antigas
+> (Cheesecake Chocolate, Creme Chinês, Sakura Cake) **saíram do cardápio** — NÃO
+> oferecer. O **PDF do cardápio ainda mostra as antigas**: se o cliente citar uma
+> delas, avise com gentileza que a carta de sobremesas foi renovada e ofereça as de
+> baixo.
+
+### À la carte
+- Torta Basca — R$ 42,90
+- Choux Cream — R$ 25,90
+- Pannacotta — R$ 25,90
+- Gelatina de Café — R$ 25,90
+- Tiramisù — R$ 42,90
+
+### No Festival do Mori (buffet do almoço)
+- Temos **sobremesas diárias**, que **variam a cada dia**: podem ser mousses, pudins,
+  tortas, entre outras. Já estão inclusas no valor do Festival.
+- Como variam, NÃO diga qual é a do dia (não temos essa informação aqui). Se o cliente
+  quiser saber a sobremesa de hoje especificamente → chamar a atendente.
+- Ao falar de sobremesas com quem pergunta em geral, vale mencionar as duas coisas: a
+  lista à la carte acima **e** que no Festival há sobremesa diária variável.
 
 ## Bebidas (não alcoólicas)
 - Refri lata — R$ 8,90
@@ -416,7 +435,7 @@ refrescante, de doçura delicada e acidez macia**, com notas que lembram toranja
 
 ## Respostas prontas
 - **Aniversariante ganha algo?** Não temos promoção para aniversariantes no
-  momento, mas preparamos um mimo especial: uma sobremesa para celebrar 🎉🍰
+  momento, mas preparamos um mimo especial: uma sobremesa para celebrar 🎉
 - **Fazem delivery?** Por enquanto só retirada; em breve teremos delivery 🛵
 - **Currículo/vagas:** "Agradecemos o envio do seu currículo e o interesse no
   Mori Izakaya. Seu perfil ficará registrado para possíveis contatos futuros."
