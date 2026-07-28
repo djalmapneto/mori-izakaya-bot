@@ -37,6 +37,17 @@ const CARDAPIOS = [
 const CARTA_SAQUES = { arquivo: 'saques.pdf', nome: 'Carta de Saquês e Licores - Mori Izakaya.pdf' };
 const LISTAR_GRUPOS = process.argv.includes('--listar-grupos');
 
+// Carimba data e hora em TUDO que aparece no log. Sem isso e impossivel saber
+// quando algo aconteceu — numa investigacao real ficamos sem saber se o bot tinha
+// parado hoje de manha ou dias antes. Vale tambem para o ruido do Baileys.
+const RELOGIO = new Intl.DateTimeFormat('pt-BR', {
+  timeZone: config.timezone, dateStyle: 'short', timeStyle: 'medium',
+});
+for (const nivel of ['log', 'warn', 'error']) {
+  const original = console[nivel].bind(console);
+  console[nivel] = (...args) => original(`[${RELOGIO.format(new Date())}]`, ...args);
+}
+
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error('❌ Nao achei sua chave da Anthropic.');
   console.error('   Crie o arquivo .env (copie de .env.exemplo) e cole sua chave nele.');
@@ -198,7 +209,11 @@ function desembrulhar(m, profundidade = 0) {
  */
 function classificarMensagem(msg) {
   const m = desembrulhar(msg.message);
-  if (!m) return { tipo: 'ignorar', rotulo: 'sem conteudo (falha ao descriptografar?)' };
+  // Sem conteudo = o WhatsApp entregou algo que nao conseguimos descriptografar.
+  // Isso NAO e o mesmo que uma reacao: pode ser um cliente de verdade perguntando
+  // algo. Ficar calado aqui e o pior dos mundos (ele nao e respondido e ninguem
+  // fica sabendo), entao tratamos como 'ilegivel' e chamamos a equipe.
+  if (!m) return { tipo: 'ilegivel', rotulo: 'falha ao descriptografar' };
 
   const texto =
     m.conversation ||
@@ -216,7 +231,9 @@ function classificarMensagem(msg) {
   if (tipo) return { tipo: 'midia', rotulo: tipo };
 
   // reacoes, figurinhas, enquetes, protocolo (apagar/editar), chaves de sessao...
-  return { tipo: 'ignorar', rotulo: Object.keys(m)[0] || 'desconhecido' };
+  // Registramos TODAS as chaves, nao so a primeira: "messageContextInfo" costuma
+  // vir acompanhando outro tipo, e mostrar so ele escondia o que era de verdade.
+  return { tipo: 'ignorar', rotulo: Object.keys(m).join('+') || 'desconhecido' };
 }
 
 // ---------------------------------------------------------------------------
@@ -271,18 +288,34 @@ async function processar(sock, jid, nome) {
 // Conexao Baileys
 // ---------------------------------------------------------------------------
 
+// O UNICO socket que vale. Todo evento que chegar de um socket diferente deste e
+// de um zumbi (uma conexao antiga que ainda nao morreu) e deve ser ignorado.
+let socketAtual = null;
+let timerReconexao = null;
+
 /**
- * REDE 1: reconecta sem deixar erro escapar.
+ * REDE 1: reconecta sem deixar erro escapar e SEM empilhar conexoes.
  *
- * Antes era `setTimeout(conectar, 3000)` — e `conectar` e assincrona. Se a propria
- * tentativa de reconexao falhasse (internet oscilando, WhatsApp fora do ar), o erro
- * ficava solto e o Node MATAVA o processo. Foi a causa provavel das ~800 mortes em
- * ~1100 quedas de conexao. Agora a falha e registrada e tentamos de novo, esperando
- * cada vez um pouco mais (3s, 6s, 12s... ate 1 min) para nao martelar o WhatsApp.
+ * Duas coisas moram aqui, e as duas ja causaram incidente:
+ *
+ * 1) `setTimeout(conectar, 3000)` deixava o erro da reconexao solto — e no Node isso
+ *    MATA o processo. Era a causa das ~800 mortes em ~1100 quedas de conexao.
+ *
+ * 2) Cada reconexao criava um socket novo SEM fechar o anterior. Os antigos seguiam
+ *    vivos, com seus listeners, e quando caiam pediam reconexao tambem — os sockets
+ *    se multiplicavam. Chegamos a SETE conexoes simultaneas com a mesma credencial,
+ *    brigando pelo mesmo estado de criptografia do Signal: dai a enxurrada de
+ *    "Bad MAC" / "Failed to decrypt" e o bot mudo, parecendo online. Isso era um
+ *    vazamento antigo, mascarado pelas mortes do item 1 (o pm2 reiniciava limpo);
+ *    ao parar as mortes, o lixo passou a acumular.
+ *
+ * Por isso: uma reconexao agendada por vez, e conectar() derruba a anterior.
  */
 function reconectar(segundos = 3) {
+  if (timerReconexao) return; // ja tem uma a caminho — nao empilha outra
   console.log(`🔄 Reconectando em ${segundos}s...`);
-  setTimeout(() => {
+  timerReconexao = setTimeout(() => {
+    timerReconexao = null;
     conectar().catch((err) => {
       console.error('❌ Falhou ao reconectar:', err.message || err);
       reconectar(Math.min(segundos * 2, 60));
@@ -290,7 +323,19 @@ function reconectar(segundos = 3) {
   }, segundos * 1000);
 }
 
+// Encerra um socket de vez: primeiro tira os ouvidos (para o end() nao disparar
+// outro ciclo de reconexao), depois desliga. NUNCA usar logout() aqui — logout
+// apaga a sessao e exigiria escanear o QR de novo.
+function derrubarSocket(sock) {
+  if (!sock) return;
+  try { sock.ev.removeAllListeners(); } catch {}
+  try { sock.end(undefined); } catch {}
+}
+
 async function conectar() {
+  derrubarSocket(socketAtual); // sem isso, a conexao antiga vira zumbi
+  socketAtual = null;
+
   const { state, saveCreds } = await useMultiFileAuthState('auth');
   const { version } = await fetchLatestBaileysVersion();
 
@@ -303,9 +348,12 @@ async function conectar() {
     syncFullHistory: false,
   });
 
+  socketAtual = sock; // a partir daqui, ESTE e o socket valido
+
   sock.ev.on('creds.update', saveCreds);
 
   sock.ev.on('connection.update', async (update) => {
+    if (sock !== socketAtual) return; // evento de um socket velho: ignorar
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
@@ -343,6 +391,7 @@ async function conectar() {
   // logo depois da conexao cair) ficava solto e derrubava o processo INTEIRO.
   // Agora fica preso aqui: registramos e seguimos para a proxima mensagem.
   sock.ev.on('messages.upsert', async (evento) => {
+    if (sock !== socketAtual) return; // socket velho nao atende ninguem
     try {
       await tratarMensagens(sock, evento);
     } catch (err) {
@@ -388,13 +437,15 @@ async function tratarMensagens(sock, { messages, type }) {
         continue;
       }
 
-      if (tipo === 'midia') {
-        // audio / imagem sem legenda / documento -> nao sabemos ler, chama a atendente
+      // Midia (audio/foto/documento) e mensagem ilegivel caem no mesmo tratamento:
+      // avisamos o cliente e chamamos a equipe. A pausa de 40min tambem serve de
+      // freio — se a criptografia quebrar em serie, o grupo interno nao e inundado.
+      if (tipo === 'midia' || tipo === 'ilegivel') {
         await enviar(sock, jid,
           'Recebi sua mensagem. Vou chamar alguem da nossa equipe para te ajudar melhor.');
         await avisarEquipe(sock, jid, nome, `[${rotulo}]`);
         pausar(jid, config.pausaHumanoMinutos);
-        console.log(`🎧 Midia (${rotulo}) -> handoff em ${jid}`);
+        console.log(`${tipo === 'midia' ? '🎧 Midia' : '🔐 Ilegivel'} (${rotulo}) -> handoff em ${jid}`);
         continue;
       }
 
@@ -426,4 +477,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { classificarMensagem, desembrulhar, tratarMensagens, estaPausado };
+module.exports = { classificarMensagem, desembrulhar, tratarMensagens, estaPausado, conectar };
