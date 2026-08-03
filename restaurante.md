@@ -31,7 +31,12 @@
 - Telefone/WhatsApp: +55 92 99140-4897
 
 ## Entrega (delivery)
-- Situação atual: **Somente retirada.** Delivery em breve.
+- Situação atual: **Delivery ATIVO** — começou em 03/08/2026. Também fazemos retirada.
+- **Pedido SOMENTE pelo cardápio digital:** https://app.cardapioweb.com/mori_izakaya
+  Lá o cliente vê o cardápio com os preços e fecha o pedido, que cai direto na nossa
+  plataforma. O Morinho NÃO anota pedido pelo WhatsApp.
+- **Área de entrega e valor da taxa: [A PREENCHER]** — ainda não temos essa informação
+  aqui. Se o cliente perguntar, o Morinho chama a Jheni.
 
 ## Pagamento
 - Pix, cartão de crédito, cartão de débito, dinheiro, ticket-refeição e
@@ -436,7 +441,9 @@ refrescante, de doçura delicada e acidez macia**, com notas que lembram toranja
 ## Respostas prontas
 - **Aniversariante ganha algo?** Não temos promoção para aniversariantes no
   momento, mas preparamos um mimo especial: uma sobremesa para celebrar 🎉
-- **Fazem delivery?** Por enquanto só retirada; em breve teremos delivery 🛵
+- **Fazem delivery?** Sim! Iniciamos o delivery há pouco tempo. Os pedidos são feitos
+  pelo nosso cardápio digital: https://app.cardapioweb.com/mori_izakaya 🛵
+  (Área de entrega e taxa → chamar a Jheni.)
 - **Currículo/vagas:** "Agradecemos o envio do seu currículo e o interesse no
   Mori Izakaya. Seu perfil ficará registrado para possíveis contatos futuros."
 
