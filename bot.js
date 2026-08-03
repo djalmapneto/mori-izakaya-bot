@@ -292,6 +292,9 @@ async function processar(sock, jid, nome) {
 // de um zumbi (uma conexao antiga que ainda nao morreu) e deve ser ignorado.
 let socketAtual = null;
 let timerReconexao = null;
+// Vira true quando o WhatsApp desloga (401). Trava qualquer tentativa de reconexao,
+// porque so uma pessoa com o celular resolve — insistir so gera loop.
+let sessaoDeslogada = false;
 
 /**
  * REDE 1: reconecta sem deixar erro escapar e SEM empilhar conexoes.
@@ -312,6 +315,7 @@ let timerReconexao = null;
  * Por isso: uma reconexao agendada por vez, e conectar() derruba a anterior.
  */
 function reconectar(segundos = 3) {
+  if (sessaoDeslogada) return; // sem QR novo, tentar de novo e so barulho
   if (timerReconexao) return; // ja tem uma a caminho — nao empilha outra
   console.log(`🔄 Reconectando em ${segundos}s...`);
   timerReconexao = setTimeout(() => {
@@ -379,9 +383,22 @@ async function conectar() {
       const code = lastDisconnect?.error?.output?.statusCode;
       const deslogado = code === DisconnectReason.loggedOut;
       console.log(`🔌 Conexao caiu (codigo ${code}).`);
+
+      // Deslogado (401) NAO se resolve tentando de novo: alguem precisa escanear o QR.
+      // Aqui morava um `process.exit(1)` — e o pm2, fiel ao seu trabalho, reiniciava.
+      // O processo caia, subia, tomava 401 e caia outra vez: chegamos a 52.920 voltas
+      // em ~1 dia, sem NUNCA conectar. Agora paramos de tentar e ficamos vivos, para
+      // (1) nao martelar o WhatsApp e (2) manter o PAINEL de reservas no ar para a
+      // equipe, que nao tem culpa da sessao ter caido.
       if (deslogado) {
-        console.error('❌ Sessao encerrada. Apague a pasta "auth" e escaneie o QR de novo.');
-        process.exit(1);
+        sessaoDeslogada = true;
+        derrubarSocket(sock);
+        socketAtual = null;
+        console.error('❌ SESSAO DO WHATSAPP ENCERRADA (deslogado).');
+        console.error('   O bot NAO vai reconectar sozinho — isso exige uma pessoa:');
+        console.error('   apague a pasta "auth" e escaneie o QR code de novo.');
+        console.error('   O painel de reservas continua funcionando normalmente.');
+        return;
       }
       reconectar();
     }
