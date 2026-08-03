@@ -296,6 +296,11 @@ let timerReconexao = null;
 // porque so uma pessoa com o celular resolve — insistir so gera loop.
 let sessaoDeslogada = false;
 
+// Estado da conexao, mostrado no painel para a equipe. Existe porque o bot ja ficou
+// mudo tres vezes sem ninguem perceber — quem descobriu foi sempre por acaso.
+let estadoConexao = 'iniciando'; // iniciando | conectado | reconectando | deslogado
+const statusWhatsApp = () => estadoConexao;
+
 /**
  * REDE 1: reconecta sem deixar erro escapar e SEM empilhar conexoes.
  *
@@ -317,6 +322,7 @@ let sessaoDeslogada = false;
 function reconectar(segundos = 3) {
   if (sessaoDeslogada) return; // sem QR novo, tentar de novo e so barulho
   if (timerReconexao) return; // ja tem uma a caminho — nao empilha outra
+  estadoConexao = 'reconectando';
   console.log(`🔄 Reconectando em ${segundos}s...`);
   timerReconexao = setTimeout(() => {
     timerReconexao = null;
@@ -366,6 +372,7 @@ async function conectar() {
     }
 
     if (connection === 'open') {
+      estadoConexao = 'conectado';
       console.log('✅ Conectado ao WhatsApp!');
       if (LISTAR_GRUPOS) {
         const grupos = await sock.groupFetchAllParticipating();
@@ -392,6 +399,7 @@ async function conectar() {
       // equipe, que nao tem culpa da sessao ter caido.
       if (deslogado) {
         sessaoDeslogada = true;
+        estadoConexao = 'deslogado';
         derrubarSocket(sock);
         socketAtual = null;
         console.error('❌ SESSAO DO WHATSAPP ENCERRADA (deslogado).');
@@ -486,7 +494,7 @@ if (require.main === module) {
 
   // Sobe o painel de reservas (pagina web da equipe) junto com o bot.
   // So liga se PAINEL_SENHA estiver definido no .env; senao, apenas avisa e segue.
-  if (!LISTAR_GRUPOS) iniciarPainel();
+  if (!LISTAR_GRUPOS) iniciarPainel(undefined, statusWhatsApp);
 
   conectar().catch((err) => {
     console.error('❌ Erro fatal:', err.message || err);

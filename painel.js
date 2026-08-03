@@ -133,6 +133,15 @@ function estilo() {
   .form-nova input,.form-nova textarea{border:1px solid var(--line);border-radius:10px;
     padding:9px;font-size:15px;color:var(--ink);background:#fff;width:100%;font-family:inherit}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  /* Aviso do estado do Morinho. Discreto quando esta tudo bem, gritante quando nao —
+     o bot ja ficou mudo tres vezes sem ninguem perceber. */
+  .status-ok{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;margin:2px 0 0}
+  .status-ok .bolinha{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+  .status-alerta{border-radius:10px;padding:12px 14px;margin:0 0 14px;
+    border:1px solid #f4c7c1;background:#fdecea;color:#8f2114}
+  .status-alerta.ameno{border-color:#f0d9a8;background:#fdf4e3;color:#7a5410}
+  .status-alerta strong{display:block;font-size:15px;margin-bottom:2px}
+  .status-alerta span{font-size:13.5px;line-height:1.4;display:block}
   .erro{background:#fdecea;border:1px solid #f4c7c1;color:#a3271b;border-radius:10px;
     padding:10px 12px;font-size:14px;margin:12px 0}
   footer{color:var(--muted);font-size:12px;text-align:center;margin-top:26px}
@@ -219,6 +228,62 @@ function blocoTurno(nome, chave, data, reservas) {
   </section>`;
 }
 
+// Quem informa o estado da conexao com o WhatsApp. O bot.js passa essa funcao ao
+// chamar iniciarPainel(); rodando o painel sozinho (npm run painel) nao ha bot, e
+// entao nao mostramos estado nenhum em vez de mentir que esta tudo bem.
+let obterStatusBot = null;
+
+// Textos do aviso por estado. Falamos com a equipe, nao com programador: nada de
+// "socket", "401" ou "sessao" — o que interessa e o que esta acontecendo e o que fazer.
+const AVISOS = {
+  deslogado: {
+    nivel: 'grave',
+    titulo: 'O Morinho está desconectado do WhatsApp',
+    texto: 'Ele não está respondendo os clientes. Atendam pelo celular normalmente e '
+      + 'avisem o Djalma — é preciso reconectar pelo servidor.',
+  },
+  reconectando: {
+    nivel: 'ameno',
+    titulo: 'O Morinho está reconectando',
+    texto: 'A conexão caiu e ele está tentando voltar sozinho. Se este aviso continuar '
+      + 'por mais de alguns minutos, fiquem de olho no WhatsApp.',
+  },
+  iniciando: {
+    nivel: 'ameno',
+    titulo: 'O Morinho está iniciando',
+    texto: 'Conectando ao WhatsApp. Deve ficar pronto em alguns segundos.',
+  },
+};
+
+function bannerStatus() {
+  if (!obterStatusBot) return '';
+  const estado = obterStatusBot();
+  if (estado === 'conectado') {
+    return `<p class="status-ok" id="status"><span class="bolinha"></span>Morinho online</p>`;
+  }
+  const a = AVISOS[estado] || AVISOS.deslogado;
+  return `<div class="status-alerta ${a.nivel === 'ameno' ? 'ameno' : ''}" id="status">
+    <strong>⚠️ ${esc(a.titulo)}</strong><span>${esc(a.texto)}</span></div>`;
+}
+
+// Mantem o aviso vivo sem recarregar a pagina (a equipe deixa o painel aberto e
+// perderia o que esta digitando). Pergunta o estado a cada 20s e troca so o aviso.
+function scriptStatus() {
+  return `<script>
+  (function () {
+    setInterval(function () {
+      // busca o elemento a CADA volta: ao trocar o outerHTML o antigo sai do documento
+      var alvo = document.getElementById('status');
+      if (!alvo) return;
+      fetch('/status')
+        .then(function (r) { return r.json(); })
+        .then(function (d) { if (d.html && d.html !== alvo.outerHTML) alvo.outerHTML = d.html; })
+        .catch(function () { /* sem rede: mantem o que esta na tela */ });
+    }, 20000);
+  })();
+  </script>`;
+}
+
 function renderPagina(data, erro) {
   const reservas = r.listarReservas(data);
   const ativas = reservas.filter((x) => x.status !== 'cancelada');
@@ -240,6 +305,8 @@ function renderPagina(data, erro) {
     <h1><span class="jp">森</span> Reservas · Mori Izakaya</h1>
     <p class="sub">Agenda da equipe</p>
   </header>
+
+  ${bannerStatus()}
 
   <div class="nav">
     <form method="get" action="/"><input type="hidden" name="data" value="${addDias(data, -1)}">
@@ -299,6 +366,7 @@ function renderPagina(data, erro) {
 
   <footer>Mori Izakaya · uso interno</footer>
 </div>
+${scriptStatus()}
 </body></html>`;
 }
 
@@ -322,11 +390,18 @@ function dataDaReq(req) {
   return ehDataValida(d) ? d : hojeManaus();
 }
 
-function iniciarPainel(porta = PORTA_PADRAO) {
+/**
+ * Sobe o painel. `statusBot` e uma funcao opcional que devolve o estado da conexao
+ * com o WhatsApp ('conectado' | 'reconectando' | 'deslogado' | 'iniciando'), para a
+ * equipe VER na hora quando o Morinho parar — ja aconteceu tres vezes de ele ficar
+ * mudo e ninguem descobrir por dias.
+ */
+function iniciarPainel(porta = PORTA_PADRAO, statusBot = null) {
   if (!SENHA) {
     console.warn('⚠️  Painel de reservas NAO iniciado: defina PAINEL_SENHA no .env para ligar a pagina.');
     return null;
   }
+  obterStatusBot = statusBot;
 
   const app = express();
   app.use(express.urlencoded({ extended: false }));
@@ -334,6 +409,11 @@ function iniciarPainel(porta = PORTA_PADRAO) {
 
   app.get('/', (req, res) => {
     res.send(renderPagina(dataDaReq(req), req.query.erro === '1'));
+  });
+
+  // Consultada pela pagina a cada 20s para atualizar so o aviso, sem recarregar tudo.
+  app.get('/status', (req, res) => {
+    res.json({ estado: obterStatusBot ? obterStatusBot() : null, html: bannerStatus() });
   });
 
   app.post('/reserva', (req, res) => {
