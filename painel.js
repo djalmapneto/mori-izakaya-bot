@@ -17,6 +17,13 @@ const r = require('./reservas');
 const PORTA_PADRAO = Number(process.env.PAINEL_PORTA) || 3000;
 const SENHA = process.env.PAINEL_SENHA || '';
 
+// Endereco do painel dentro do dominio. Vazio = ele mora na raiz ("/").
+// Com PAINEL_BASE="/painel" ele passa a morar em /painel, liberando a raiz para o site
+// institucional. As ROTAS aqui nao mudam (o nginx tira o prefixo antes de entregar);
+// o que muda sao os links e redirecionamentos que a pagina devolve para o navegador.
+// No dia em que o painel ganhar um subdominio so dele, basta apagar a variavel.
+const BASE = (process.env.PAINEL_BASE || '').replace(/\/+$/, '');
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -170,17 +177,17 @@ function itemReserva(res, data) {
   let acoes = '';
   if (!canc) {
     const confirmar = res.status === 'pendente'
-      ? `<form method="post" action="/reserva/${res.id}/confirmar?data=${data}">
+      ? `<form method="post" action="${BASE}/reserva/${res.id}/confirmar?data=${data}">
            <button class="btn btn-sm btn-accent">Confirmar</button></form>`
       : '';
     acoes = `
       <div class="acoes">
         ${confirmar}
-        <form method="post" action="/reserva/${res.id}/mesas?data=${data}">
+        <form method="post" action="${BASE}/reserva/${res.id}/mesas?data=${data}">
           <input type="text" name="mesas" placeholder="mesa(s)" value="${esc(res.mesas || '')}">
           <button class="btn btn-sm btn-ghost">Salvar mesa</button>
         </form>
-        <form method="post" action="/reserva/${res.id}/cancelar?data=${data}"
+        <form method="post" action="${BASE}/reserva/${res.id}/cancelar?data=${data}"
               onsubmit="return confirm('Cancelar esta reserva?')">
           <button class="btn btn-sm btn-ghost">Cancelar</button>
         </form>
@@ -275,7 +282,7 @@ function scriptStatus() {
       // busca o elemento a CADA volta: ao trocar o outerHTML o antigo sai do documento
       var alvo = document.getElementById('status');
       if (!alvo) return;
-      fetch('/status')
+      fetch('${BASE}/status')
         .then(function (r) { return r.json(); })
         .then(function (d) { if (d.html && d.html !== alvo.outerHTML) alvo.outerHTML = d.html; })
         .catch(function () { /* sem rede: mantem o que esta na tela */ });
@@ -309,16 +316,16 @@ function renderPagina(data, erro) {
   ${bannerStatus()}
 
   <div class="nav">
-    <form method="get" action="/"><input type="hidden" name="data" value="${addDias(data, -1)}">
+    <form method="get" action="${BASE}/"><input type="hidden" name="data" value="${addDias(data, -1)}">
       <button class="btn btn-arrow" title="Dia anterior">‹</button></form>
     <div class="dia">${rotuloData(data)}</div>
-    <form method="get" action="/"><input type="hidden" name="data" value="${addDias(data, 1)}">
+    <form method="get" action="${BASE}/"><input type="hidden" name="data" value="${addDias(data, 1)}">
       <button class="btn btn-arrow" title="Próximo dia">›</button></form>
   </div>
   <div class="nav">
-    <form method="get" action="/"><input type="hidden" name="data" value="${hojeManaus()}">
+    <form method="get" action="${BASE}/"><input type="hidden" name="data" value="${hojeManaus()}">
       <button class="btn btn-sm btn-ghost">Hoje</button></form>
-    <form method="get" action="/" style="flex:1;display:flex;gap:8px;justify-content:flex-end">
+    <form method="get" action="${BASE}/" style="flex:1;display:flex;gap:8px;justify-content:flex-end">
       <input type="date" name="data" value="${data}">
       <button class="btn btn-sm">Ir</button>
     </form>
@@ -331,7 +338,7 @@ function renderPagina(data, erro) {
 
   <details class="nova">
     <summary>+ Nova reserva (telefone / balcão)</summary>
-    <form class="form-nova" method="post" action="/reserva?data=${data}">
+    <form class="form-nova" method="post" action="${BASE}/reserva?data=${data}">
       <label>Nome
         <input type="text" name="nome" required placeholder="Nome do cliente">
       </label>
@@ -421,27 +428,27 @@ function iniciarPainel(porta = PORTA_PADRAO, statusBot = null) {
     const pes = parseInt(pessoas, 10);
     const dataVolta = ehDataValida(data) ? data : hojeManaus();
     if (!nome || !ehDataValida(data) || !/^\d{2}:\d{2}$/.test(horario) || !Number.isInteger(pes) || pes < 1) {
-      return res.redirect(`/?data=${dataVolta}&erro=1`);
+      return res.redirect(`${BASE}/?data=${dataVolta}&erro=1`);
     }
     r.criarReserva({
       data, horario, pessoas: pes, nome: nome.trim(),
       telefone: (telefone || '').trim(), mesas: (mesas || '').trim(),
       observacao: (observacao || '').trim(), origem: 'equipe',
     });
-    res.redirect(`/?data=${dataVolta}`);
+    res.redirect(`${BASE}/?data=${dataVolta}`);
   });
 
   app.post('/reserva/:id/confirmar', (req, res) => {
     r.confirmarReserva(Number(req.params.id));
-    res.redirect(`/?data=${dataDaReq(req)}`);
+    res.redirect(`${BASE}/?data=${dataDaReq(req)}`);
   });
   app.post('/reserva/:id/cancelar', (req, res) => {
     r.cancelarReserva(Number(req.params.id));
-    res.redirect(`/?data=${dataDaReq(req)}`);
+    res.redirect(`${BASE}/?data=${dataDaReq(req)}`);
   });
   app.post('/reserva/:id/mesas', (req, res) => {
     r.definirMesas(Number(req.params.id), (req.body.mesas || '').trim());
-    res.redirect(`/?data=${dataDaReq(req)}`);
+    res.redirect(`${BASE}/?data=${dataDaReq(req)}`);
   });
 
   const server = app.listen(porta, () => {
