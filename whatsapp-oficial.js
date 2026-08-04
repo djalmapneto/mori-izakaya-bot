@@ -94,13 +94,20 @@ async function chamarAPI(caminho, corpo) {
 }
 
 async function enviarTexto(numero, texto) {
-  return chamarAPI(`${PHONE_ID}/messages`, {
-    messaging_product: 'whatsapp',
-    to: numero,
-    type: 'text',
-    // preview_url: false para o link do cardapio digital nao virar um card gigante
-    text: { body: texto, preview_url: false },
-  });
+  try {
+    return await chamarAPI(`${PHONE_ID}/messages`, {
+      messaging_product: 'whatsapp',
+      to: numero,
+      type: 'text',
+      // preview_url: false para o link do cardapio digital nao virar um card gigante
+      text: { body: texto, preview_url: false },
+    });
+  } catch (err) {
+    // O erro da Meta nao diz PARA QUEM falhou, e sem isso o 131030 ("numero nao esta
+    // na lista") vira adivinhacao — principalmente com a confusao do nono digito.
+    err.message = `${err.message} [destino: ${numero}]`;
+    throw err;
+  }
 }
 
 // Marca a mensagem do cliente como lida (os dois tiquinhos azuis). Nao e enfeite:
@@ -288,6 +295,12 @@ async function processarEvento(corpo) {
 
         const nome = nomePorNumero.get(numero);
         const { tipo, texto, rotulo } = classificarMensagem(msg);
+
+        // Mostra o numero EXATO que a Meta entregou. No Brasil isso importa: o wa_id
+        // de celular as vezes vem SEM o nono digito (5592XXXXYYYY) enquanto o cadastro
+        // tem COM (55929XXXXYYYY) — e responder para o formato errado da erro 131030,
+        // que so diz "numero nao esta na lista" sem dizer qual numero ele tentou.
+        console.log(`📩 [${tipo}] de ${numero}${nome ? ` (${nome})` : ''}`);
 
         marcarComoLida(msg.id).catch(() => { /* nao vale derrubar a resposta por causa do visto */ });
 
