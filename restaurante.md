@@ -36,8 +36,66 @@
 - **Pedido SOMENTE pelo cardápio digital:** https://app.cardapioweb.com/mori_izakaya
   Lá o cliente vê o cardápio com os preços e fecha o pedido, que cai direto na nossa
   plataforma. O Morinho NÃO anota pedido pelo WhatsApp.
-- **Área de entrega e valor da taxa: [A PREENCHER]** — ainda não temos essa informação
-  aqui. Se o cliente perguntar, o Morinho chama a Jheni.
+- ⚠️ **O link vai SEMPRE limpo e sozinho** — nada colado nele: sem asterisco, sem
+  negrito, sem parênteses, aspas ou ponto final grudado. Com qualquer caractere colado o
+  WhatsApp não cria o link clicável e o cliente não consegue abrir (aconteceu de verdade
+  em 03/08/2026, com o link entre asteriscos).
+- **Tempo de entrega:** não temos essa informação aqui. Se o cliente perguntar, o
+  Morinho chama a Jheni.
+
+### Taxa de entrega por bairro (Manaus)
+> ⚠️ Esta lista é o que já temos anotado — ela **não é a área de entrega inteira**.
+> **É PROIBIDO o Morinho dizer que não entregamos em algum lugar.** Bairro fora da
+> lista, nome que ele não consegue identificar com certeza, ou bairro dividido em partes
+> sem o cliente dizer qual: não chuta e não nega — chama a Jheni para confirmar.
+
+| Bairro | Taxa |
+|---|---|
+| Adrianópolis | R$ 11 |
+| Aleixo 1 | R$ 16 |
+| Alvorada | R$ 16 |
+| Alvorada 2 | R$ 15 |
+| Aparecida | R$ 16 |
+| Betânia | R$ 20 |
+| Cachoeirinha | R$ 18 |
+| Centro | R$ 14 |
+| Chapada | R$ 12 |
+| Colônia Oliveira Machado | R$ 27 |
+| Compensa | R$ 20 |
+| Crespo | R$ 27 |
+| Da Paz | R$ 20 |
+| Dom Pedro 1 | R$ 14 |
+| Dom Pedro 2 | R$ 16 |
+| Educandos | R$ 21 |
+| Flores 2 | R$ 25 |
+| Flores 3 | R$ 19 |
+| Glória | R$ 16 |
+| Japiim | R$ 25 |
+| Lírio do Vale | R$ 20 |
+| Lírio do Vale 2 | R$ 18 |
+| Morro da Liberdade | R$ 20 |
+| Nossa Senhora das Graças | R$ 11 |
+| Nova Esperança | R$ 17 |
+| Parque 10 — parte 1 | R$ 14 |
+| Parque 10 — parte 2 | R$ 20 |
+| Petrópolis | R$ 18 |
+| Planalto | R$ 25 |
+| Ponta Negra | R$ 22 |
+| Ponta Negra 1 | R$ 23 |
+| Ponta Negra 2 | R$ 24 |
+| Ponta Negra 3 | R$ 25 |
+| Praça 14 | R$ 14 |
+| Presidente Vargas | R$ 12 |
+| Raiz | R$ 18 |
+| Redenção | R$ 21 |
+| Santa Luzia | R$ 21 |
+| Santo Agostinho | R$ 22 |
+| Santo Antônio | R$ 17 |
+| São Francisco | R$ 15 |
+| São Geraldo | R$ 11 |
+| São Jorge | R$ 16 |
+| São Lázaro | R$ 27 |
+| São Raimundo | R$ 17 |
 
 ## Pagamento
 - Pix, cartão de crédito, cartão de débito, dinheiro, ticket-refeição e
@@ -444,7 +502,9 @@ refrescante, de doçura delicada e acidez macia**, com notas que lembram toranja
   momento, mas preparamos um mimo especial: uma sobremesa para celebrar 🎉
 - **Fazem delivery?** Sim! Iniciamos o delivery há pouco tempo. Os pedidos são feitos
   pelo nosso cardápio digital: https://app.cardapioweb.com/mori_izakaya 🛵
-  (Área de entrega e taxa → chamar a Jheni.)
+  (O link vai limpo, sem asteriscos colados. Taxa do bairro → ver a tabela na seção
+  Entrega. Bairro fora da tabela, tempo de entrega → chamar a Jheni, nunca dizer que
+  não entregamos.)
 - **Currículo/vagas:** "Agradecemos o envio do seu currículo e o interesse no
   Mori Izakaya. Seu perfil ficará registrado para possíveis contatos futuros."
 
