@@ -26,6 +26,7 @@ const pino = require('pino');
 const config = require('./config.json');
 const { responder } = require('./cerebro');
 const { iniciarPainel } = require('./painel');
+const { iniciarWebhook } = require('./whatsapp-oficial');
 
 // Cardapios (PDFs) enviados quando o cliente pede o menu
 const CARDAPIOS = [
@@ -495,6 +496,12 @@ if (require.main === module) {
   // Sobe o painel de reservas (pagina web da equipe) junto com o bot.
   // So liga se PAINEL_SENHA estiver definido no .env; senao, apenas avisa e segue.
   if (!LISTAR_GRUPOS) iniciarPainel(undefined, statusWhatsApp);
+
+  // Sobe o ouvido da API OFICIAL (Cloud API) ao lado do Baileys, para a migracao ser
+  // testada com o numero de TESTE da Meta sem tirar o Morinho atual do ar. Enquanto
+  // as variaveis WA_* nao existirem no .env, isso nao liga nada — o comportamento de
+  // hoje fica exatamente igual.
+  if (!LISTAR_GRUPOS) iniciarWebhook();
 
   conectar().catch((err) => {
     console.error('❌ Erro fatal:', err.message || err);
