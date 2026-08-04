@@ -93,19 +93,53 @@ async function chamarAPI(caminho, corpo) {
   return dados;
 }
 
+/**
+ * O NONO DIGITO BRASILEIRO.
+ *
+ * Celulares no Brasil ganharam um 9 na frente em 2012, mas o WhatsApp ainda entrega
+ * o identificador de muita gente no formato ANTIGO: 55 + DDD + 8 digitos. Quando
+ * respondemos para o identificador exato que ela mandou — que e o que a documentacao
+ * manda fazer — a propria Meta pode recusar com o erro 131030 ("numero nao esta na
+ * lista"), porque o cadastro dela tem o numero COM o 9. Ela se contradiz.
+ *
+ * Devolve os outros formatos plausiveis do MESMO telefone, para tentarmos de novo.
+ * So mexe em celular: fixos brasileiros comecam com 2-5 e nunca ganharam o 9.
+ */
+function variantesBrasileiras(numero) {
+  const m = /^55(\d{2})(\d{8,9})$/.exec(numero);
+  if (!m) return [];
+  const [, ddd, local] = m;
+  if (local.length === 8 && /^[6-9]/.test(local)) return [`55${ddd}9${local}`];
+  if (local.length === 9 && local.startsWith('9')) return [`55${ddd}${local.slice(1)}`];
+  return [];
+}
+
 async function enviarTexto(numero, texto) {
+  const corpo = (destino) => ({
+    messaging_product: 'whatsapp',
+    to: destino,
+    type: 'text',
+    // preview_url: false para o link do cardapio digital nao virar um card gigante
+    text: { body: texto, preview_url: false },
+  });
+
   try {
-    return await chamarAPI(`${PHONE_ID}/messages`, {
-      messaging_product: 'whatsapp',
-      to: numero,
-      type: 'text',
-      // preview_url: false para o link do cardapio digital nao virar um card gigante
-      text: { body: texto, preview_url: false },
-    });
+    return await chamarAPI(`${PHONE_ID}/messages`, corpo(numero));
   } catch (err) {
-    // O erro da Meta nao diz PARA QUEM falhou, e sem isso o 131030 ("numero nao esta
-    // na lista") vira adivinhacao — principalmente com a confusao do nono digito.
-    err.message = `${err.message} [destino: ${numero}]`;
+    // 131030 = destinatario recusado. E o unico erro em que vale tentar outro
+    // formato do numero; nos demais (token, janela de 24h) insistir so atrasa.
+    if (!/131030/.test(err.message)) {
+      err.message = `${err.message} [destino: ${numero}]`;
+      throw err;
+    }
+    for (const alternativo of variantesBrasileiras(numero)) {
+      try {
+        const r = await chamarAPI(`${PHONE_ID}/messages`, corpo(alternativo));
+        console.log(`↪️  ${numero} foi recusado; entregue como ${alternativo} (nono digito).`);
+        return r;
+      } catch { /* tenta o proximo formato */ }
+    }
+    err.message = `${err.message} [destino: ${numero}, variantes tambem recusadas]`;
     throw err;
   }
 }
