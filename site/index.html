@@ -11,6 +11,30 @@
 <meta property="og:url" content="https://moriizakaya.com.br/">
 <meta property="og:type" content="restaurant">
 <meta property="og:locale" content="pt_BR">
+<!-- Dados estruturados: entrega nome, endereço e telefone de forma legível por
+     máquina. É o que os robôs da Meta e do Google leem ao conferir o negócio. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Mori Izakaya",
+  "legalName": "MORI IZAKAYA RESTAURANTE LTDA",
+  "taxID": "61.753.029/0001-39",
+  "url": "https://moriizakaya.com.br/",
+  "telephone": "+55-92-99140-4897",
+  "servesCuisine": "Japonesa",
+  "priceRange": "$$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "R São Luiz, 105",
+    "addressLocality": "Manaus",
+    "addressRegion": "AM",
+    "postalCode": "69057-250",
+    "addressCountry": "BR"
+  },
+  "sameAs": ["https://instagram.com/izakaya.mori"]
+}
+</script>
 <style>
   :root{
     --sumi:#14110f;        /* tinta — o fundo da casa */
@@ -137,7 +161,7 @@
 
   <section>
     <h2>Onde estamos</h2>
-    <p class="endereco">Rua São Luís, 105 — Adrianópolis<br>Manaus / AM</p>
+    <p class="endereco">Rua São Luiz, 105 — Adrianópolis<br>Manaus / AM</p>
     <p class="referencia">Entre o Castelinho e o Posto Ipiranga.</p>
   </section>
 
@@ -154,13 +178,11 @@
   </section>
 
   <footer>
-    <p>Mori Izakaya · Rua São Luís, 105 — Adrianópolis, Manaus / AM</p>
-    <!--
-      PENDENTE: a Meta compara o site com o CNPJ na verificação do negócio.
-      Assim que a razão social e o número do CNPJ forem confirmados, descomentar
-      a linha abaixo e preencher EXATAMENTE como está no Cartão CNPJ.
-    <p>RAZÃO SOCIAL LTDA · CNPJ 00.000.000/0001-00</p>
-    -->
+    <!-- Razão social, CNPJ e endereço copiados LETRA POR LETRA do Cartão CNPJ
+         (inclusive "São Luiz" com z): a Meta compara o site com o documento na
+         verificação do negócio, e divergência de grafia atrasa a aprovação. -->
+    <p>MORI IZAKAYA RESTAURANTE LTDA · CNPJ 61.753.029/0001-39</p>
+    <p>R São Luiz, 105 — Adrianópolis · CEP 69.057-250 · Manaus / AM</p>
   </footer>
 
 </div>

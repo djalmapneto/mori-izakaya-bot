@@ -25,7 +25,8 @@
   **à la carte** pelo cardápio (ver seção "Almoço" abaixo).
 
 ## Localização e contato
-- Endereço: Rua São Luís, 105 — Adrianópolis (Manaus/AM)
+- Endereço: Rua São Luiz, 105 — Adrianópolis (Manaus/AM) — CEP 69.057-250
+  (grafia "Luiz" com z, igual ao Cartão CNPJ e ao site)
 - Ponto de referência: entre o Castelinho e o Posto Ipiranga
 - Instagram: @izakaya.mori
 - Telefone/WhatsApp: +55 92 99140-4897
