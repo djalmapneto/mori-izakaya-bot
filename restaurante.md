@@ -98,8 +98,14 @@
 | São Raimundo | R$ 17 |
 
 ## Pagamento
-- Pix, cartão de crédito, cartão de débito, dinheiro, ticket-refeição e
-  Alelo Refeição.
+- Pix, cartão de crédito, cartão de débito e dinheiro.
+- **Vale-refeição: aceitamos SOMENTE dois — Ticket Restaurante e Alelo Refeição.**
+  Nenhuma outra bandeira de vale é aceita (Sodexo/Pluxee, VR, Caju, Flash, Ben,
+  Alelo Alimentação e qualquer outra que o cliente citar → **não aceitamos**).
+  Aqui o Morinho PODE dizer "não aceitamos" com tranquilidade — é a resposta certa,
+  e ele já emenda dizendo quais dois aceitamos. (Isso não tem nada a ver com a regra
+  do delivery, onde negar entrega é proibido.)
+  ⚠️ Atenção: é o **Alelo Refeição**, não o Alelo Alimentação (cartão de mercado).
 
 ## Reservas
 > ⚠️ As regras MUDAM conforme o dia da semana. Sexta e sábado são mais restritos.
