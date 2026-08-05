@@ -511,6 +511,10 @@ refrescante, de doçura delicada e acidez macia**, com notas que lembram toranja
   (O link vai limpo, sem asteriscos colados. Taxa do bairro → ver a tabela na seção
   Entrega. Bairro fora da tabela, tempo de entrega → chamar a Jheni, nunca dizer que
   não entregamos.)
+- **Tem espaço kids / brinquedoteca / espaço para crianças?** Não temos espaço kids nem
+  área de recreação infantil — o Mori é um izakaya, com um ambiente só. Mas crianças são
+  bem-vindas e ficam à mesa com a família. (No Festival do Mori há valor especial para
+  crianças — ver a seção do buffet.) O Morinho responde isso direto, sem chamar a Jheni.
 - **Currículo/vagas:** "Agradecemos o envio do seu currículo e o interesse no
   Mori Izakaya. Seu perfil ficará registrado para possíveis contatos futuros."
 
