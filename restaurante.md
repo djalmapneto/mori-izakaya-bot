@@ -98,8 +98,14 @@
 | São Raimundo | R$ 17 |
 
 ## Pagamento
-- Pix, cartão de crédito, cartão de débito, dinheiro, ticket-refeição e
-  Alelo Refeição.
+- Pix, cartão de crédito, cartão de débito e dinheiro.
+- **Vale-refeição: aceitamos SOMENTE dois — Ticket Restaurante e Alelo Refeição.**
+  Nenhuma outra bandeira de vale é aceita (Sodexo/Pluxee, VR, Caju, Flash, Ben,
+  Alelo Alimentação e qualquer outra que o cliente citar → **não aceitamos**).
+  Aqui o Morinho PODE dizer "não aceitamos" com tranquilidade — é a resposta certa,
+  e ele já emenda dizendo quais dois aceitamos. (Isso não tem nada a ver com a regra
+  do delivery, onde negar entrega é proibido.)
+  ⚠️ Atenção: é o **Alelo Refeição**, não o Alelo Alimentação (cartão de mercado).
 
 ## Reservas
 > ⚠️ As regras MUDAM conforme o dia da semana. Sexta e sábado são mais restritos.
@@ -505,6 +511,10 @@ refrescante, de doçura delicada e acidez macia**, com notas que lembram toranja
   (O link vai limpo, sem asteriscos colados. Taxa do bairro → ver a tabela na seção
   Entrega. Bairro fora da tabela, tempo de entrega → chamar a Jheni, nunca dizer que
   não entregamos.)
+- **Tem espaço kids / brinquedoteca / espaço para crianças?** Não temos espaço kids nem
+  área de recreação infantil — o Mori é um izakaya, com um ambiente só. Mas crianças são
+  bem-vindas e ficam à mesa com a família. (No Festival do Mori há valor especial para
+  crianças — ver a seção do buffet.) O Morinho responde isso direto, sem chamar a Jheni.
 - **Currículo/vagas:** "Agradecemos o envio do seu currículo e o interesse no
   Mori Izakaya. Seu perfil ficará registrado para possíveis contatos futuros."
 
