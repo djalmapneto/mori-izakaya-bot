@@ -55,6 +55,11 @@ function paraMinutos(hhmm) {
   return h * 60 + m;
 }
 
+// 1105 -> "18:25" (o caminho de volta, para mostrar horas ao cliente)
+function paraHHMM(minutos) {
+  return `${String(Math.floor(minutos / 60)).padStart(2, '0')}:${String(minutos % 60).padStart(2, '0')}`;
+}
+
 // data 'YYYY-MM-DD' -> indice do dia da semana no fuso de Manaus (0=domingo ... 6=sabado).
 // Ancoramos ao meio-dia UTC so para nao correr risco de "virar o dia" na conversao.
 function diaSemanaIndice(data) {
@@ -155,7 +160,8 @@ function resumoTurno(data, turno) {
  *
  * motivos possiveis quando disponivel=false:
  *  data_invalida | horario_invalido | pessoas_invalido | data_no_passado | sem_turno |
- *  fora_da_janela | horario_nao_e_slot | grupo_grande | horario_muito_em_cima | turno_cheio
+ *  fora_da_janela | horario_nao_e_slot | grupo_grande | horario_muito_em_cima |
+ *  em_cima_da_hora_precisa_atendente | horario_ja_passou | turno_cheio
  */
 function consultarDisponibilidade(data, horario, pessoas, agora = agoraEmManaus()) {
   if (!RE_DATA.test(data)) return { disponivel: false, motivo: 'data_invalida' };
@@ -179,17 +185,48 @@ function consultarDisponibilidade(data, horario, pessoas, agora = agoraEmManaus(
     return { disponivel: false, motivo: 'grupo_grande', turno, limitePessoas: regra.limitePessoas };
   }
 
-  // Reserva para HOJE precisa de um respiro para a cozinha e o salao se organizarem.
-  if (data === agora.data && t < agora.minutos + R.antecedenciaMinimaMin) {
-    const proximo = slotsDoDia(data, turno).find((s) => paraMinutos(s) >= agora.minutos + R.antecedenciaMinimaMin);
-    return {
-      disponivel: false,
-      motivo: 'horario_muito_em_cima',
+  // Reserva para HOJE em cima da hora (menos que a antecedencia minima).
+  //
+  // Recusar SEMPRE estava custando venda de verdade: o cliente ja estava decidido, a
+  // mesa estava livre, e o Morinho mandava ele voltar outro dia. Entao a decisao passou a
+  // depender do dia, por config.reservas.emCimaDaHoraPorGrupo (grupo = o mesmo
+  // agrupamento das janelas):
+  //   "confirma"  -> domingo a quinta: a casa esta mais tranquila, o Morinho confirma.
+  //   "atendente" -> sexta e sabado: a casa enche, quem decide e a atendente (handoff).
+  // Grupo sem regra no config volta ao comportamento antigo ("recusa").
+  const emCimaDaHora = data === agora.data && t < agora.minutos + R.antecedenciaMinimaMin;
+  const politicaEmCima = emCimaDaHora
+    ? (R.emCimaDaHoraPorGrupo || {})[regra.grupo] || 'recusa'
+    : 'confirma';
+
+  if (emCimaDaHora) {
+    // Onde aceitamos em cima da hora, o "proximo horario possivel" e o proximo slot que
+    // ainda nao passou; onde nao aceitamos, so depois da antecedencia minima.
+    const piso = politicaEmCima === 'recusa' ? agora.minutos + R.antecedenciaMinimaMin : agora.minutos;
+    const proximo = slotsDoDia(data, turno).find((s) => paraMinutos(s) >= piso) || null;
+    const contexto = {
       turno,
       antecedenciaMinimaMin: R.antecedenciaMinimaMin,
-      horaAgora: `${String(Math.floor(agora.minutos / 60)).padStart(2, '0')}:${String(agora.minutos % 60).padStart(2, '0')}`,
-      proximoHorarioPossivelHoje: proximo || null,
+      horaAgora: paraHHMM(agora.minutos),
+      proximoHorarioPossivelHoje: proximo,
     };
+    if (politicaEmCima === 'atendente') {
+      // Sem "proximoHorarioPossivelHoje" de proposito: aqui o caminho e a atendente, e o
+      // Morinho nao pode se distrair oferecendo outro horario no lugar dela.
+      return {
+        disponivel: false,
+        motivo: 'em_cima_da_hora_precisa_atendente',
+        turno,
+        horaAgora: contexto.horaAgora,
+      };
+    }
+    if (politicaEmCima === 'recusa') {
+      return { disponivel: false, motivo: 'horario_muito_em_cima', ...contexto };
+    }
+    // "confirma": so nao da para reservar um horario que ja passou de verdade.
+    if (t < agora.minutos) {
+      return { disponivel: false, motivo: 'horario_ja_passou', ...contexto };
+    }
   }
 
   const reservado = somaPessoasTurno(data, turno);
@@ -198,7 +235,15 @@ function consultarDisponibilidade(data, horario, pessoas, agora = agoraEmManaus(
     return { disponivel: false, motivo: 'turno_cheio', turno, vagasRestantesNoTurno: Math.max(0, vagas), teto: R.tetoPorTurno };
   }
 
-  return { disponivel: true, turno, vagasRestantesNoTurno: vagas - pessoas, teto: R.tetoPorTurno };
+  return {
+    disponivel: true,
+    turno,
+    vagasRestantesNoTurno: vagas - pessoas,
+    teto: R.tetoPorTurno,
+    // Avisa quem chamou que este "sim" e para daqui a pouco — o Morinho usa isso para
+    // confirmar sem prometer folga que nao existe.
+    emCimaDaHora,
+  };
 }
 
 // ---------------------------------------------------------------------------
