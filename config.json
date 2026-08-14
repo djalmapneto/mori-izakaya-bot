@@ -20,6 +20,7 @@
     "toleranciaAtrasoMin": 10,
     "intervaloSlotMin": 15,
     "antecedenciaMinimaMin": 60,
+    "emCimaDaHoraPorGrupo": { "domQui": "confirma", "segQui": "confirma", "sexSab": "atendente" },
     "janelas": {
       "almoco": {
         "dias": { "0": "domQui", "1": "domQui", "2": "domQui", "3": "domQui", "4": "domQui", "5": "sexSab", "6": "sexSab" },
