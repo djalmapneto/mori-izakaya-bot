@@ -139,32 +139,66 @@
 No almoço o cliente tem **duas opções** e escolhe a que preferir:
 
 ### 1) Festival do Mori (buffet livre)
-- **Festival do Mori** é o nome do nosso buffet do almoço: sushis e pratos
-  quentes, à vontade, quantas vezes quiser — **R$ 157,00** por pessoa.
+- **Festival do Mori** é o nome do nosso buffet do almoço: **R$ 157,00** por pessoa,
+  à vontade, quantas vezes quiser.
   (Se o cliente falar "buffet", "rodízio" ou "almoço livre", é o Festival do Mori.)
 - **Quando é servido:** todos os dias, durante todo o almoço — das **11h às 15h**,
   sábado e domingo inclusive. Não há horário reduzido em nenhum dia da semana.
-- **O que está incluso no valor (R$ 157,00), SEM custo extra:** tudo o que está no
-  buffet **mais** estes cinco itens, que são pedidos ao garçom e preparados na hora
-  para chegar quentinhos e frescos:
-  **kushiyakis, sashimis dos peixes do dia, hand rolls, tempurás e baos.**
-  Se o cliente perguntar se esses adicionais têm custo extra, a resposta é: NÃO, estão
-  inclusos; é só pedir ao garçom.
-- ⚠️ **Os raméns NÃO entram no Festival do Mori.** Rámen é **à la carte**, cobrado à
-  parte pelo preço do cardápio, mesmo para quem está no buffet. O Morinho já disse o
-  contrário a um cliente — não pode se repetir. O mesmo vale para qualquer outro prato
-  do cardápio à la carte que não esteja na lista de inclusos acima (teishoku, combos,
-  aperitivos etc.): se não está na lista, **não** está incluso.
-- Regra para o Morinho: a lista de inclusos acima é **fechada**. Perguntaram de um item
-  que não está nela? Ele não chuta que está incluso — diz que aquele item é à la carte
-  ou, se não tiver certeza, chama a Jheni.
-- O Festival inclui também a **sobremesa do dia**, que varia (mousses, pudins, tortas
-  e outras) — ver a seção "Sobremesas".
+#### O que está incluso nos R$ 157,00 (o Festival tem DUAS partes)
+> As duas partes estão inclusas no mesmo valor, sem custo extra e sem limite de
+> quantidade. O cliente NÃO paga nada a mais por nenhuma delas.
+
+**Parte 1 — a mesa do buffet, o cliente se serve à vontade:**
+sushis, entradinhas e pratos quentes. Ele levanta, se serve e repete quantas vezes
+quiser.
+
+**Parte 2 — feitos na hora, é só pedir ao garçom:**
+**kushiyakis, sashimis dos peixes do dia, hand rolls, tempurás e baos.**
+Esses cinco não ficam parados na mesa **de propósito**: são preparados na hora para
+chegar quentinhos e frescos. Estão tão inclusos quanto a mesa — se o cliente perguntar
+se têm custo extra, a resposta é NÃO, é só pedir ao garçom.
+
+**Mais a sobremesa do dia**, que varia (mousses, pudins, tortas e outras) — ver a seção
+"Sobremesas".
+
+#### O que NÃO está incluso
+- ⚠️ **Rámen NÃO entra no Festival.** É **à la carte**, cobrado à parte pelo preço do
+  cardápio, mesmo para quem está no buffet. O Morinho já disse o contrário a uma
+  cliente — não pode se repetir.
+- O mesmo vale para os outros pratos do cardápio à la carte: teishoku, combos,
+  takoyakis, os aperitivos do cardápio, drinks e bebidas.
+
+#### Se perguntarem de um item que não está nas duas listas acima
+> ⚠️ **Cuidado com a pegadinha:** quase todo item deste documento tem um preço ao lado,
+> porque o cardápio à la carte é o mesmo para quem não está no buffet. **Ter preço no
+> cardápio NÃO prova que é cobrado de quem está no Festival** — as entradinhas da mesa
+> também aparecem no cardápio com preço.
+
+O Morinho **não chuta para nenhum dos dois lados**. Só existem dois caminhos:
+
+**1) Pode afirmar com tranquilidade que é à la carte (cobrado à parte)** — apenas nestes:
+- **raméns** (confirmado pelo dono em 31/08/2026);
+- pratos principais servidos individualmente: **teishoku, donburis, karê, sandos, butas**;
+- **combinados do Mori**;
+- **bebidas e drinks** — nenhuma bebida entra no Festival.
+
+**2) Em QUALQUER outro caso, ele NÃO diz que tem custo extra — chama a Jheni.**
+Isso inclui os **otsumames/aperitivos** (kimchi, missoshiro, guioza, korokke, tamagoyaki,
+tako no pirikara…), **karaagues, tebasaki, oniguiris, takoyakis, furais** e qualquer coisa
+que possa estar na mesa de entradinhas do dia.
+⚠️ Dizer que um item da mesa "tem custo extra" é **pior que não saber**: desmente a casa
+na frente do cliente e cobra por algo que já estava incluso.
+
+> [A PREENCHER] **Quais entradinhas ficam na mesa do buffet?** Com essa lista escrita
+> aqui, o Morinho responde sozinho e para de precisar chamar a Jheni nesses casos.
 
 ### 2) À la carte no almoço
-- No almoço também servimos **à la carte**: o cliente pode pedir os pratos do
-  cardápio normal (aperitivos, raméns, teishoku, sushi etc.), pagando só o que
-  pedir, em vez de entrar no Festival do Mori.
+- No almoço também servimos **à la carte**: em vez de entrar no Festival, o cliente pode
+  pedir os pratos do cardápio normal (aperitivos, raméns, teishoku, sushi etc.) e paga
+  só o que pedir.
+- ⚠️ Não confundir: quem **está no Festival** se serve dos sushis da mesa à vontade, sem
+  pagar nada a mais. O "sushi à la carte" do cardápio é para quem **não** entrou no
+  Festival.
 
 ### Valores especiais do Festival do Mori (buffet)
 > Estes valores valem para o buffet (Festival do Mori). Quem come à la carte
