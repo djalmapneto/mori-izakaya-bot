@@ -211,13 +211,16 @@ function itemReserva(res, data) {
 }
 
 function blocoTurno(nome, chave, data, reservas) {
-  if (!turnoTemNoDia(data, chave)) {
+  const doTurno = reservas.filter((x) => x.turno === chave);
+  // Dia que nao aceita esse turno (jantar de domingo; e, desde 31/08/2026, o jantar de
+  // sexta e sabado, que virou ordem de chegada). So escondemos o bloco se nao houver NADA
+  // gravado: reserva lancada quando a regra era outra nao pode sumir da tela da equipe.
+  if (!turnoTemNoDia(data, chave) && !doTurno.length) {
     return `<section class="turno">
       <div class="turno-top"><span class="turno-nome">${nome}</span></div>
       <p class="fechado">Sem ${nome.toLowerCase()} neste dia.</p>
     </section>`;
   }
-  const doTurno = reservas.filter((x) => x.turno === chave);
   const resumo = r.resumoTurno(data, chave);
   const pct = Math.min(100, Math.round((resumo.reservado / resumo.teto) * 100));
   const cheio = resumo.vagas === 0 ? 'cheio' : '';
