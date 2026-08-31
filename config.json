@@ -30,10 +30,9 @@
         }
       },
       "jantar": {
-        "dias": { "0": null, "1": "segQui", "2": "segQui", "3": "segQui", "4": "segQui", "5": "sexSab", "6": "sexSab" },
+        "dias": { "0": null, "1": "segQui", "2": "segQui", "3": "segQui", "4": "segQui", "5": null, "6": null },
         "grupos": {
-          "segQui": { "inicio": "18:00", "fim": "22:00", "limitePessoas": 15 },
-          "sexSab": { "inicio": "18:00", "fim": "19:30", "limitePessoas": 10 }
+          "segQui": { "inicio": "18:00", "fim": "22:00", "limitePessoas": 15 }
         }
       }
     },
